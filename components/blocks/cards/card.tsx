@@ -48,13 +48,14 @@ const Card = ({i, title, description, src, url, color, progress, range, targetSc
             </div>
           </div>
 
-          <div className={styles.imageContainer}>
+          <div className={styles.imageContainer} style={{ position: 'relative' }}>
             <motion.div
               className={styles.inner}
-              style={{scale: imageScale}}
+              style={{scale: imageScale, position: 'relative', width: '100%', height: '100%'}}
             >
               <Image
                 fill
+                sizes="(max-width: 768px) 100vw, 50vw"
                 src={`/services/${src}`}
                 alt="image" 
               />

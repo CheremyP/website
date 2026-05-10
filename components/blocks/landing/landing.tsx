@@ -104,16 +104,22 @@ export default function Landing() {
             src={bits}
             alt='image'
             width={getWidth(300)}
+            height={getWidth(300) * 0.75}
+            priority
           />
-           <Image 
+          <Image 
             src={bonsai}
             alt='image'
             width={getWidth(300)}
+            height={getWidth(300) * 0.75}
+            priority
           />
           <Image 
             src={zero_ones}
             alt='image'
             width={getWidth(225)}
+            height={getWidth(225) * 0.75}
+            priority
           />
       </div>
       <div ref={plane2} className={styles.plane}>
@@ -121,16 +127,22 @@ export default function Landing() {
             src={growth}
             alt='image'
             width={getWidth(250)}
+            height={getWidth(250) * 0.75}
+            priority
           />
            <Image 
             src={gpu}
             alt='image'
             width={getWidth(200)}
+            height={getWidth(200) * 0.75}
+            priority
           />
           <Image 
             src={ai}
             alt='image'
             width={getWidth(225)}
+            height={getWidth(225) * 0.75}
+            priority
           />
       </div>
       <div ref={plane3} className={styles.plane}>
@@ -138,11 +150,15 @@ export default function Landing() {
             src={wall_e}
             alt='image'
             width={getWidth(150)}
+            height={getWidth(150) * 0.75}
+            priority
           />
            <Image 
             src={computer}
             alt='image'
             width={getWidth(200)}
+            height={getWidth(200) * 0.75}
+            priority
           />
       </div>
       <div className={styles.title}>
