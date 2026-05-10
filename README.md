@@ -1,5 +1,20 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Setup Instructions
+
+### Environment Variables
+Copy `.env.example` to `.env.local`:
+```bash
+cp .env.example .env.local
+```
+
+### Contact Form (Resend)
+The `/contact` form uses Resend to deliver emails.
+1. Create a [Resend](https://resend.com) account.
+2. Verify the `artfcl.com` domain in your Resend dashboard (requires adding DNS records).
+3. Generate an API Key and place it in `.env.local` as `RESEND_API_KEY`.
+4. The form sends from `CONTACT_FROM_EMAIL` (default: contact@artfcl.com) to `CONTACT_TO_EMAIL` (default: info@artfcl.com). Ensure the "FROM" email exists on your verified Resend domain.
+
 ## Getting Started
 
 First, run the development server:

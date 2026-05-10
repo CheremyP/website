@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import styles from './style.module.scss';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const casesData = [
   {
@@ -11,7 +12,8 @@ const casesData = [
     role: "Managing Director",
     clientName: "Beton",
     image: "/works/construction.jpg",
-    logo: "/logos/beton.svg"
+    logo: "/logos/beton.svg",
+    slug: "beton"
   },
   {
     id: 2,
@@ -20,7 +22,8 @@ const casesData = [
     role: "Operations Director",
     clientName: "PMC",
     image: "/works/hospital.jpg",
-    logo: "/logos/pmc_logo.svg"
+    logo: "/logos/pmc_logo.svg",
+    slug: "pmc"
   },
   {
     id: 3,
@@ -29,7 +32,8 @@ const casesData = [
     role: "Co-Founder",
     clientName: "KPN",
     image: "/works/kpn.jpg",
-    logo: "/logos/kpn_logo.svg"
+    logo: "/logos/kpn_logo.svg",
+    slug: "kpn"
   },
   {
     id: 4,
@@ -38,7 +42,8 @@ const casesData = [
     role: "Managing Partner",
     clientName: "Tata Steel",
     image: "/works/steel.jpg",
-    logo: "/logos/tata_logo.svg"
+    logo: "/logos/tata_logo.svg",
+    slug: "tata-steel"
   },
   {
     id: 5,
@@ -47,7 +52,8 @@ const casesData = [
     role: "Head of Innovation",
     clientName: "LVNL",
     image: "/works/aviation.jpg",
-    logo: "/logos/lvnl_logo.svg"
+    logo: "/logos/lvnl_logo.svg",
+    slug: "lvnl"
   },
   {
     id: 6,
@@ -56,7 +62,8 @@ const casesData = [
     role: "Chief Technology Officer",
     clientName: "VZ",
     image: "/works/vz.jpg",
-    logo: "/logos/vz.svg"
+    logo: "/logos/vz.svg",
+    slug: "vz"
   }
 ];
 
@@ -105,9 +112,9 @@ export default function Testimonials() {
             className={styles.carouselTrack}
             style={{ transform: `translateX(-${currentIndex * (100 / visibleCards)}%)` }}
           >
-            {casesData.map((item) => (
-              <div key={item.id} className={styles.card}>
-                <div className={styles.cardInner}>
+            {casesData.map((item) => {
+              const CardInner = (
+                <div className={`${styles.cardInner} ${item.slug ? styles.clickable : ''}`}>
                   <Image 
                     src={item.image} 
                     alt={item.clientName} 
@@ -133,8 +140,20 @@ export default function Testimonials() {
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+
+              return (
+                <div key={item.id} className={styles.card}>
+                  {item.slug ? (
+                    <Link href={`/works/${item.slug}`} className={styles.cardLink}>
+                      {CardInner}
+                    </Link>
+                  ) : (
+                    CardInner
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
