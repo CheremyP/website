@@ -1,47 +1,19 @@
 import styles from './style.module.css';
-import { translate } from '../anim';
-import { m } from 'framer-motion';
+import Link from 'next/link';
 
 export default function Footer() {
     return (
-        <div className={styles.footer}>
-            <ul>
-                <m.li 
-                    custom={[0.3, 0]} 
-                    variants={translate} initial="initial" 
-                    animate="enter" 
-                    exit="exit">
-                    <span>Made by:</span> ARTEFCL
-                </m.li>
-            </ul>
-            <ul>
-                <m.li  
-                    custom={[0.3, 0]} 
-                    variants={translate} initial="initial" 
-                    animate="enter" 
-                    exit="exit">
-                    <span>Typography:</span> Inter Mono
-                </m.li>
-            </ul>
-            <ul>
-                <m.li
-                    custom={[0.3, 0]} 
-                    variants={translate} initial="initial" 
-                    animate="enter" 
-                    exit="exit">
-                    Privacy Policy
-                </m.li>
-                    <m.li 
-                    custom={[0.3, 0]} 
-                    variants={translate} initial="initial" 
-                    animate="enter" 
-                    exit="exit">
-                    Terms & Conditions
-                </m.li>
-            </ul>
-            <ul>
-
-            </ul>
-        </div>
+        <>
+            <div className={styles.footer}>
+                <a>Awwwards</a>
+                <a>Instagram</a>
+                <a>Dribble</a>
+                <a>LinkedIn</a>
+            </div>
+            <div className={styles.legal}>
+                <Link href="/privacy-policy" prefetch={false}>Privacy Policy</Link>
+                <Link href="/terms-of-service" prefetch={false}>Terms & Conditions</Link>
+            </div>
+        </>
     )
 }

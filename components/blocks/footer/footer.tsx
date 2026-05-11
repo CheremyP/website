@@ -2,10 +2,12 @@
 
 import styles from './style.module.scss';
 import { useRef } from 'react';
+import posthog from 'posthog-js';
 import { useScroll, m, useTransform } from 'framer-motion';
 import Magnetic from '../../ui/magnetic';
 import Rounded from '../../ui/roundedbutton';
 import Curve from '../curve';
+import Link from 'next/link';
 
 export default function Footer() {
   const container = useRef<HTMLDivElement | null>(null);
@@ -24,7 +26,7 @@ export default function Footer() {
           <h2>Let&apos;s work</h2>
           <h2>together</h2>
           <m.div style={{ x }} className={styles.buttonContainer}>
-            <Rounded backgroundColor="rgba(255, 255, 255, 0.15)" className={styles.button} onClick={() => { window.location.href = '/contact'; }}
+            <Rounded backgroundColor="rgba(255, 255, 255, 0.15)" className={styles.button} onClick={() => { posthog.capture('get_in_touch_clicked', { source: 'footer_cta' }); window.location.href = '/contact'; }}
             >
               <p>Get in touch</p>
             </Rounded>
@@ -62,8 +64,8 @@ export default function Footer() {
           <div>
             <h3>Resources</h3>
             <Magnetic><p>Blog</p></Magnetic>
-            <Magnetic><p>Privacy Policy</p></Magnetic>
-            <Magnetic><p>Terms of Service</p></Magnetic>
+            <Magnetic><p><Link href="/privacy-policy" prefetch={false} style={{ color: 'inherit', textDecoration: 'none' }}>Privacy Policy</Link></p></Magnetic>
+            <Magnetic><p><Link href="/terms-of-service" prefetch={false} style={{ color: 'inherit', textDecoration: 'none' }}>Terms of Service</Link></p></Magnetic>
           </div>
         </div>
       </div>

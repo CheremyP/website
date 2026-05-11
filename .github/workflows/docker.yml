@@ -2,7 +2,7 @@ name: Docker
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main", "staging"]
     tags: ["v*.*.*"]
 
 env:
@@ -38,6 +38,7 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
+            type=raw,value=staging,enable=${{ github.ref == 'refs/heads/staging' }}
             type=sha
             type=semver,pattern={{version}}
 

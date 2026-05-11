@@ -3,19 +3,19 @@
 This document tracks all remaining tasks required before deploying `artfcl.com` to production (and setting up the staging environment).
 
 ## 1. Repository & Code Gaps
-- [ ] **CI/CD for Staging**: Update `.github/workflows/ci.yml` and `docker.yml` to trigger on `develop` branch and push a `staging` tag.
-- [ ] **Environment-Aware Behavior**: Add `NEXT_PUBLIC_APP_ENV` plumbing. Implement an SEO guard (e.g., `X-Robots-Tag: noindex` or `<meta name="robots" content="noindex">`) when not in production.
-- [ ] **Production-Grade Next.js Config**: Add security headers (Strict-Transport-Security, X-Frame-Options, etc.), set `poweredByHeader: false`, and verify `images.remotePatterns` if using `next/image`.
-- [ ] **Contact Form Hardening**: Implement server-side Zod validation, add a honeypot field (or Turnstile/hCaptcha) to prevent spam, and consider simple rate limiting.
-- [ ] **Build & Runtime Smoke Tests**: Run `docker compose --env-file .env.local up --build` locally and verify the standalone build boots successfully without missing CSS/assets.
-- [ ] **Legal & Content**: Add Privacy Policy and Imprint/Legal Notice pages (crucial for GDPR compliance if hosting in the EU).
-- [ ] **Basic SEO & Metadata**: Verify favicon, OG image, social cards, sitemap.xml, and robots.txt exist.
+- [x] **CI/CD for Staging**: Update `.github/workflows/ci.yml` and `docker.yml` to trigger on `staging` branch.
+- [x] **Environment-Aware Behavior**: Add `NEXT_PUBLIC_APP_ENV` plumbing. Implement an SEO guard (e.g., `X-Robots-Tag: noindex` or `<meta name="robots" content="noindex">`) when not in production.
+- [x] **Production-Grade Next.js Config**: Add security headers (Strict-Transport-Security, X-Frame-Options, etc.), set `poweredByHeader: false`, and verify `images.remotePatterns` if using `next/image`.
+- [x] **Contact Form Hardening**: Implement server-side Zod validation, add a honeypot field (or Turnstile/hCaptcha) to prevent spam, and consider simple rate limiting.
+- [x] **Build & Runtime Smoke Tests**: Run `docker compose --env-file .env.local up --build` locally and verify the standalone build boots successfully without missing CSS/assets.
+- [x] **Legal & Content**: Add Privacy Policy and Imprint/Legal Notice pages (crucial for GDPR compliance if hosting in the EU).
+- [x] **Basic SEO & Metadata**: Verify favicon, OG image, social cards, sitemap.xml, and robots.txt exist.
 
 ## 2. Repository Hygiene
-- [ ] **Gitignore check**: Ensure `.env*`, `.next/`, and `tsconfig.tsbuildinfo` are fully gitignored and removed from git cache if necessary.
+- [x] **Gitignore check**: Ensure `.env*`, `.next/`, and `tsconfig.tsbuildinfo` are fully gitignored and removed from git cache if necessary.
 - [ ] **Branch Protection**: Setup branch protection rules for `main` requiring PR reviews and passing CI checks.
-- [ ] **Dependabot**: Verify `.github/dependabot.yml` covers both `npm` and `github-actions`.
-- [ ] **Documentation**: Create a `SECURITY.md` or `DEPLOY.md` detailing the secrets rotation runbook.
+- [x] **Dependabot**: Verify `.github/dependabot.yml` covers both `npm` and `github-actions`.
+- [x] **Documentation**: Create a `SECURITY.md` or `DEPLOY.md` detailing the secrets rotation runbook.
 
 ## 3. Server & Infrastructure (Hetzner)
 - [ ] **Provision Server**: Spin up a Hetzner Cloud CX22 or CPX21 instance (Ubuntu 24.04 LTS).
@@ -44,7 +44,26 @@ This document tracks all remaining tasks required before deploying `artfcl.com` 
 
 ## 7. Observability & Analytics (Sentry + PostHog)
 - [ ] **Sentry Integration**: Install `@sentry/nextjs` via wizard, configure `SENTRY_DSN` for staging/prod, and ensure source maps are uploaded correctly in the Docker build.
-- [ ] **PostHog Integration**: Install `posthog-js`, wrap the app in a `PostHogProvider`, and add `NEXT_PUBLIC_POSTHOG_KEY`.
+- [x] **PostHog Integration**: Install `posthog-js`, wrap the app in a `PostHogProvider`, and add `NEXT_PUBLIC_POSTHOG_KEY`.
 - [ ] **Cookie Consent Banner**: Implement a cookie consent banner (e.g., CookieConsent v3 or Klaro!) to gate PostHog initialization and stay GDPR compliant.
 - [ ] **Legal Disclosures**: Ensure the Privacy Policy explicitly covers Sentry (error tracking), PostHog (analytics/session replay), and your chosen cookie banner logic.
 - [ ] **Secrets Updates**: Add Sentry and PostHog API keys to your secret store strategy (Dokploy Env or Infisical).
+
+## 8. Mobile Responsiveness & Polish
+- [x] **Legal Pages Padding**: Create a responsive CSS module for `app/privacy-policy/page.tsx` and `app/imprint/page.tsx` so the heavy top padding (`20vh`) scales down gracefully on smaller screens.
+- [ ] **Viewport Scaling**: Verify that all `clamp()` typography and container widths (`92vw`) maintain proper alignment and readability without horizontal scrolling on mobile devices (viewport < 768px).
+- [ ] **Component Polish**: Check that dynamic layouts (like the footer, navigation overlay, and form fields) stack correctly and remain usable on mobile viewports per the Artefcl UI guidelines.
+- [x] **PostHog Integration**: Install `posthog-js`, wrap the app in a `PostHogProvider`
+
+## 9. PostHog Session Replay & Dead Clicks
+- [ ] **Session Replay**: Review PostHog session replay configuration in `instrumentation-client.ts`. Ensure `sessionReplayOptions` (or equivalent) are set correctly (e.g., `maskAllInputs: false` for dead click detection, `captureRootTelemetries: true`). Verify replays are being recorded in staging.
+- [ ] **Dead Clicks**: PostHog dead click detection requires session replay to be active. Confirm that `$dead_click` events are appearing in PostHog events table. If not, check if `capture_dead_clicks` is enabled in `sessionReplayOptions`. Add custom dead click filters for known false positives (e.g., nav transitions, animated buttons).
+- [ ] **Privacy Compliance**: Ensure dead click / session replay is gated behind cookie consent and that no PII is captured in replay recordings (review `maskContent` options for inputs and text fields).
+
+## 10. Code Hygiene & Refactoring
+- [ ] **Rename `header/footer/` → `header/nav-links/`**: The folder `components/blocks/header/footer/` exports a `Footer` component used exclusively by the nav overlay, but shares its name with the standalone `components/blocks/footer/` block. Rename to `components/blocks/header/nav-links/` and update the import in `header/nav/index.tsx` accordingly.
+- [ ] **Standardize `header/nav/index.tsx` export**: Rename the default export from `Index` to `NavLinks` to match the folder and the pattern used by other blocks (e.g., `cards/index.tsx` exports `Cards`).
+- [ ] **Standardize style module naming**: Most blocks use `style.module.css` but `components/blocks/footer/` uses `style.module.scss`. Unify to `.css` or migrate consistently to `.scss` across all blocks.
+- [ ] **TypeScript strict mode**: Run `tsc --strict` and address any `any` types or missing return types in `components/blocks/`.
+- [ ] **Dead code audit**: Check `components/blocks/` for unused imports, commented-out code, or abandoned block variants.
+- [ ] **Remove `posthog-setup-report.md`**: Delete this wizard-generated artifact as it contains no runtime or operational value.

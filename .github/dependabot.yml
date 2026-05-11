@@ -1,53 +1,17 @@
 version: 2
 updates:
-  # Enable version updates for npm
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 10
-    labels:
-      - "dependencies"
-      - "npm"
-    assignees:
-      - "CheremyP"
-    reviewers:
-      - "CheremyP"
     commit-message:
-      prefix: "npm"
-      include: "scope"
-    ignore:
-      - dependency-name: "lodash"
-        versions: ["5.x.x"]
-    allow:
-      - dependency-type: "direct"
-    versioning-strategy: auto
-
-  # Enable version updates for Docker
-  - package-ecosystem: "docker"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-    labels:
-      - "dependencies"
-      - "docker"
-    open-pull-requests-limit: 5
-    commit-message:
-      prefix: "docker"
+      prefix: "chore"
       include: "scope"
 
-  # Enable version updates for GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
-      day: "monday"
-    labels:
-      - "dependencies"
-      - "github-actions"
-    open-pull-requests-limit: 5
     commit-message:
       prefix: "ci"
-      include: "scope"
+
