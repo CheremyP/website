@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { motion, useTransform, MotionValue } from 'framer-motion';
+import { m, useTransform, MotionValue } from 'framer-motion';
 import styles from './style.module.scss';
 
 export default function Curve({ progress }: { progress: MotionValue<number> }) {
@@ -23,7 +23,7 @@ export default function Curve({ progress }: { progress: MotionValue<number> }) {
   return (
     <div className={styles.curveContainer}>
       <svg width="100%" height="300px" viewBox={`0 0 ${windowWidth} 300`} preserveAspectRatio="none">
-        <motion.path fill="#FFFFFF" d={path} />
+        <m.path fill="#FFFFFF" d={path} />
       </svg>
     </div>
   );

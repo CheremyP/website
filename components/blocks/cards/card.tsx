@@ -1,7 +1,7 @@
 'use client'
 import Image from 'next/image';
 import styles from './style.module.scss';
-import { useTransform, motion, useScroll } from 'framer-motion';
+import { useTransform, m, useScroll } from 'framer-motion';
 import { useRef } from 'react';
 
 const Card = ({i, title, description, src, url, color, progress, range, targetScale}: any) => {
@@ -17,7 +17,7 @@ const Card = ({i, title, description, src, url, color, progress, range, targetSc
  
   return (
     <div ref={container} className={styles.cardContainer}>
-      <motion.div 
+      <m.div 
         style={{scale, top:`calc(-5vh + ${i * 100}px)`}} 
         className={styles.card}
       >
@@ -49,7 +49,7 @@ const Card = ({i, title, description, src, url, color, progress, range, targetSc
           </div>
 
           <div className={styles.imageContainer} style={{ position: 'relative' }}>
-            <motion.div
+            <m.div
               className={styles.inner}
               style={{scale: imageScale, position: 'relative', width: '100%', height: '100%'}}
             >
@@ -59,10 +59,10 @@ const Card = ({i, title, description, src, url, color, progress, range, targetSc
                 src={`/services/${src}`}
                 alt="image" 
               />
-            </motion.div>
+            </m.div>
           </div>
         </div>
-      </motion.div>
+      </m.div>
     </div>
   )
 }

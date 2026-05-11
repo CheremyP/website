@@ -1,7 +1,7 @@
 'use client';
 import styles from './style.module.scss';
 import Image from 'next/image';
-import { motion, useReducedMotion } from 'framer-motion';
+import { m, useReducedMotion } from 'framer-motion';
 import SplitText from '@/components/ui/splittext';
 import type { Case, CaseBlock } from '@/lib/cases';
 
@@ -15,14 +15,14 @@ export function CaseHero({ caseData }: { caseData: Case }) {
         <SplitText text={caseData.title} className={styles.title} />
       </div>
       
-      <motion.div 
+      <m.div 
         className={styles.heroImageWrapper}
         initial={{ y: 50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ ...transition, delay: 0.2 }}
       >
         <Image src={caseData.heroImage} alt={caseData.title} fill className={styles.image} priority />
-      </motion.div>
+      </m.div>
       
       <div className={styles.content}>
         <div className={styles.metaStrip}>
@@ -58,34 +58,34 @@ export function BlockRenderer({ block, index }: { block: CaseBlock, index: numbe
   switch (block.type) {
     case 'text':
       return (
-        <motion.div className={styles.textBlock} {...fadeUp}>
+        <m.div className={styles.textBlock} {...fadeUp}>
           {block.heading && <h3 className={styles.blockHeading}>{block.heading}</h3>}
           <p className={styles.blockContent}>{block.content}</p>
-        </motion.div>
+        </m.div>
       );
     case 'image':
       return (
-        <motion.div className={`${styles.imageBlock} ${block.fullWidth ? styles.fullWidth : ''}`} {...fadeUp}>
+        <m.div className={`${styles.imageBlock} ${block.fullWidth ? styles.fullWidth : ''}`} {...fadeUp}>
           <div className={styles.imgWrap}>
             <Image src={block.src} alt={block.alt} fill className={styles.image} />
           </div>
           {block.caption && <p className={styles.caption}>{block.caption}</p>}
-        </motion.div>
+        </m.div>
       );
     case 'image-pair':
       return (
-        <motion.div className={styles.imagePairBlock} {...fadeUp}>
+        <m.div className={styles.imagePairBlock} {...fadeUp}>
           <div className={styles.imgWrap}>
             <Image src={block.srcLeft} alt={block.altLeft} fill className={styles.image} />
           </div>
           <div className={styles.imgWrap}>
             <Image src={block.srcRight} alt={block.altRight} fill className={styles.image} />
           </div>
-        </motion.div>
+        </m.div>
       );
     case 'quote':
       return (
-        <motion.div className={styles.quoteBlock} {...fadeUp}>
+        <m.div className={styles.quoteBlock} {...fadeUp}>
           <blockquote className={styles.quoteText}>"{block.text}"</blockquote>
           {(block.author || block.role) && (
             <div className={styles.quoteMeta}>
@@ -93,7 +93,7 @@ export function BlockRenderer({ block, index }: { block: CaseBlock, index: numbe
               {block.role && <span>{block.role}</span>}
             </div>
           )}
-        </motion.div>
+        </m.div>
       );
     default:
       return null;

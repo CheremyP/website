@@ -103,9 +103,9 @@ export default function Testimonials() {
   return (
     <section className={styles.worksSection}>
       <div className={styles.container}>
-        <h1 className={styles.mainTitle}> 
+        <h2 className={styles.mainTitle}> 
           Works
-        </h1>
+        </h2>
 
         <div className={styles.carouselContainer}>
           <div 
@@ -125,10 +125,13 @@ export default function Testimonials() {
                   
                   <div className={styles.content}>
                     <div className={styles.logoContainer}>
-                      <img 
+                      <Image 
                         src={item.logo} 
                         alt={item.clientName} 
+                        width={100}
+                        height={40}
                         className={styles.clientLogo}
+                        style={{ objectFit: 'contain' }}
                       />
                     </div>
                     

@@ -1,5 +1,5 @@
 import React from 'react'
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import Image from 'next/image';
 import styles from './style.module.css';
 import { opacity } from '../anim';
@@ -9,13 +9,13 @@ type Props = { src: string; alt?: string; selectedLink: SelectedLink };
 
 export default function Index({ src, alt = "image", selectedLink }: Props) {
   return (
-    <motion.div
+    <m.div
       variants={opacity}
       initial="initial"
       animate={selectedLink.isActive ? "open" : "closed"}
       className={styles.imageContainer}
     >
-      <Image src={`/header/${src}`} fill alt={alt} />
-    </motion.div>
+      <Image src={`/header/${src}`} fill sizes="500px" style={{ objectFit: 'cover' }} alt={alt} />
+    </m.div>
   )
 }

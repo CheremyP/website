@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { getAllCases } from '@/lib/cases';
 import SplitText from '@/components/ui/splittext';
-import { motion, useReducedMotion } from 'framer-motion';
+import { m, useReducedMotion } from 'framer-motion';
 
 export default function WorkIndex() {
   const cases = getAllCases();
@@ -22,7 +22,7 @@ export default function WorkIndex() {
         
         <div className={styles.grid}>
           {cases.map((c, i) => (
-            <motion.div 
+            <m.div 
               key={c.slug}
               className={styles.caseCard}
               initial={{ y: 50, opacity: 0 }}
@@ -53,7 +53,7 @@ export default function WorkIndex() {
                   </div>
                 </div>
               </Link>
-            </motion.div>
+            </m.div>
           ))}
         </div>
       </div>

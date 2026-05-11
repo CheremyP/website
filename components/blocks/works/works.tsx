@@ -2,6 +2,7 @@
 import styles from './style.module.scss';
 import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
+import Image from 'next/image';
 import ScrollTrigger from 'gsap/dist/ScrollTrigger';
 
 const projects = [
@@ -79,10 +80,12 @@ export default function Works() {
           <div className={styles.projectCard} key={index}>
             <div className={styles.imageWrapper}>
               {/* Using standard img tag with placeholders logic just in case image doesn't exist */}
-              <img 
+              <Image 
                 src={project.image} 
                 alt={project.title} 
-                className={styles.image} 
+                className={styles.image}
+                fill
+                style={{ objectFit: 'cover' }}
                 onError={(e) => {
                   e.currentTarget.style.display = 'none';
                   e.currentTarget.parentElement!.style.backgroundColor = '#333';
@@ -90,7 +93,7 @@ export default function Works() {
               />
               
               <div className={styles.logoOverlay}>
-                <img src={project.logo} alt="Client Logo" />
+                <Image src={project.logo} alt="Client Logo" width={80} height={40} style={{ objectFit: 'contain' }} />
               </div>
             </div>
             

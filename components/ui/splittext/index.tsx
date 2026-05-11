@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, useReducedMotion } from 'framer-motion';
+import { m, useReducedMotion } from 'framer-motion';
 
 interface SplitTextProps {
   text: string;
@@ -38,7 +38,7 @@ export default function SplitText({ text, className }: SplitTextProps) {
   };
 
   return (
-    <motion.h1
+    <m.h1
       className={className}
       variants={wrapperVariants}
       initial="hidden"
@@ -61,18 +61,18 @@ export default function SplitText({ text, className }: SplitTextProps) {
                 marginTop: '-0.1em'
               }}
             >
-              <motion.span
+              <m.span
                 variants={letterVariants}
                 style={{ display: 'inline-block' }}
               >
                 {char}
-              </motion.span>
+              </m.span>
             </span>
           ))}
           {/* Add a non-breaking space after each word except the last */}
           {wordIndex !== text.split(' ').length - 1 && '\u00A0'}
         </span>
       ))}
-    </motion.h1>
+    </m.h1>
   );
 }

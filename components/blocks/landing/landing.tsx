@@ -54,8 +54,8 @@ export default function Landing() {
     const maxWidth = baseWidth;       // Largest size allowed is original base
     const dynamicWidth = windowWidth * (baseWidth / 1440); // Scales continuously with viewport width
 
-    // Return the dynamic width bounded by [minWidth, maxWidth]
-    return Math.max(minWidth, Math.min(dynamicWidth, maxWidth));
+    // Return the dynamic width bounded by [minWidth, maxWidth] and rounded to an integer
+    return Math.round(Math.max(minWidth, Math.min(dynamicWidth, maxWidth)));
   };
 
   let requestAnimationFrameId: number | null = null;
@@ -102,71 +102,58 @@ export default function Landing() {
       <div ref={plane1} className={styles.plane}>
           <Image 
             src={bits}
-            alt='image'
-            width={getWidth(300)}
-            height={getWidth(300) * 0.75}
+            alt='Decorative binary code graphics'
+            style={{ width: getWidth(300), height: 'auto' }}
             priority
           />
           <Image 
             src={bonsai}
-            alt='image'
-            width={getWidth(300)}
-            height={getWidth(300) * 0.75}
+            alt='Decorative bonsai graphics'
+            style={{ width: getWidth(300), height: 'auto' }}
             priority
           />
           <Image 
             src={zero_ones}
-            alt='image'
-            width={getWidth(225)}
-            height={getWidth(225) * 0.75}
-            priority
+            alt='Decorative binary code graphics'
+            style={{ width: getWidth(225), height: 'auto' }}
           />
       </div>
       <div ref={plane2} className={styles.plane}>
           <Image 
             src={growth}
-            alt='image'
-            width={getWidth(250)}
-            height={getWidth(250) * 0.75}
-            priority
+            alt='Decorative growth graphics'
+            style={{ width: getWidth(250), height: 'auto' }}
           />
            <Image 
             src={gpu}
-            alt='image'
-            width={getWidth(200)}
-            height={getWidth(200) * 0.75}
-            priority
+            alt='Decorative GPU graphics'
+            style={{ width: getWidth(200), height: 'auto' }}
           />
           <Image 
             src={ai}
-            alt='image'
-            width={getWidth(225)}
-            height={getWidth(225) * 0.75}
-            priority
+            alt='Decorative AI graphics'
+            style={{ width: getWidth(225), height: 'auto' }}
           />
       </div>
       <div ref={plane3} className={styles.plane}>
           <Image 
             src={wall_e}
-            alt='image'
-            width={getWidth(150)}
-            height={getWidth(150) * 0.75}
-            priority
+            alt='Decorative Wall-E graphics'
+            style={{ width: getWidth(140), height: 'auto' }}
           />
            <Image 
             src={computer}
-            alt='image'
-            width={getWidth(200)}
-            height={getWidth(200) * 0.75}
-            priority
+            alt='Decorative computer graphics'
+            style={{ width: getWidth(200), height: 'auto' }}
           />
       </div>
       <div className={styles.title}>
-        <p>ARTEFCL</p>
+        <h1 className="sr-only">ARTEFCL | AI with Soul, Strategy and Impact</h1>
+        <p aria-hidden="true">ARTEFCL</p>
         <div className={styles.subtitle}>
-          <img src="/handwriting/ai_soul.svg" alt="AI with Soul" className={styles.handwriting} />
-          <img src="/handwriting/strategy.svg" alt="Strategy" className={styles.handwriting} />
-          <img src="/handwriting/impact.svg" alt="and Impact" className={styles.handwriting} />
+          <Image src="/handwriting/ai_soul.svg" alt="AI with Soul" width={300} height={100} className={styles.handwriting} priority />
+          <Image src="/handwriting/strategy.svg" alt="Strategy" width={300} height={100} className={styles.handwriting} priority />
+          <Image src="/handwriting/impact.svg" alt="and Impact" width={300} height={100} className={styles.handwriting} priority />
         </div>
       </div>
       <div 

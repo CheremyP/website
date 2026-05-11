@@ -1,6 +1,6 @@
 'use client';
 import styles from './style.module.css';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { useState } from 'react';
 import { height } from '../anim';
 import Body from '../body';
@@ -18,7 +18,7 @@ export default function Index() {
   const [selectedLink, setSelectedLink] = useState({ isActive: false, index: 0 });
 
   return (
-    <motion.div variants={height} initial="initial" animate="enter" exit="exit" className={styles.nav}>
+    <m.div variants={height} initial="initial" animate="enter" exit="exit" className={styles.nav}>
       <div className={styles.wrapper}>
         <div className={styles.container}>
           <Body links={links} selectedLink={selectedLink} setSelectedLink={setSelectedLink} />
@@ -30,6 +30,6 @@ export default function Index() {
           selectedLink={selectedLink}
         />
       </div>
-    </motion.div>
+    </m.div>
   );
 }

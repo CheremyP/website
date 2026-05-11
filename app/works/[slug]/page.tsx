@@ -16,10 +16,32 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = await params;
   const caseData = getCaseBySlug(resolvedParams.slug);
+  
   if (!caseData) return { title: 'Case Not Found' };
+  
   return {
-    title: `${caseData.title} | Artfcl Work`,
+    title: `${caseData.title} | ${caseData.client}`,
     description: caseData.summary,
+    openGraph: {
+      title: `${caseData.title} | ${caseData.client}`,
+      description: caseData.summary,
+      url: `https://www.artfcl.com/works/${caseData.slug}`,
+      type: 'article',
+      images: [
+        {
+          url: caseData.heroImage,
+          width: 1200,
+          height: 630,
+          alt: `${caseData.client} Case Study - ${caseData.sector}`,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${caseData.title} | ${caseData.client}`,
+      description: caseData.summary,
+      images: [caseData.heroImage],
+    },
   };
 }
 

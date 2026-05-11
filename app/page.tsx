@@ -1,10 +1,12 @@
 import Header from "@/components/blocks/header";
 import Landing from "@/components/blocks/landing/landing";
 import Logos from "@/components/blocks/logos/logos";
-import Cards from "@/components/blocks/cards";
-import Testimonials from "@/components/blocks/testimonials/testimonials";
-import Footer from "@/components/blocks/footer/footer";
-import Studio from "@/components/blocks/studio/studio";
+import dynamic from 'next/dynamic';
+
+const Studio = dynamic(() => import('@/components/blocks/studio/studio'));
+const Cards = dynamic(() => import('@/components/blocks/cards'));
+const Testimonials = dynamic(() => import('@/components/blocks/testimonials/testimonials'));
+const Footer = dynamic(() => import('@/components/blocks/footer/footer'));
 
 export default function Home() {
   return (

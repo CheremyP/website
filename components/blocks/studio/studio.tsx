@@ -1,7 +1,7 @@
 'use client';
 import styles from './style.module.scss';
 import { useRef, useEffect, useState } from 'react';
-import { motion, useScroll, useTransform, useInView } from 'framer-motion';
+import { m, useScroll, useTransform, useInView } from 'framer-motion';
 
 const metrics = [
   { value: 5, suffix: '+', label: 'Industries Transformed' },
@@ -70,12 +70,12 @@ export default function Studio() {
             </h2>
             
             {/* Foreground Text (Solid Black) revealed by clip-path */}
-            <motion.h2 
+            <m.h2 
               className={styles.foregroundText}
               style={{ clipPath: useTransform(clipProgress, val => `polygon(0 0, ${val}% 0, ${val}% 100%, 0 100%)`) }}
             >
               A cross-industry AI studio
-            </motion.h2>
+            </m.h2>
           </div>
 
           {/* Right: Descriptive Paragraph */}
@@ -89,7 +89,7 @@ export default function Studio() {
         {/* Impact Metrics Section */}
         <div className={styles.metricsContainer}>
           {metrics.map((metric, index) => (
-            <motion.div 
+            <m.div 
               key={index}
               className={styles.metricBlock}
               initial={{ y: 50, opacity: 0 }}
@@ -99,7 +99,7 @@ export default function Studio() {
             >
               <Counter value={metric.value} suffix={metric.suffix} />
               <p className={styles.label}>{metric.label}</p>
-            </motion.div>
+            </m.div>
           ))}
         </div>
         
