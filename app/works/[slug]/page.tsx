@@ -4,7 +4,6 @@ import Footer from "@/components/blocks/footer/footer";
 import { getCaseBySlug, getAllCases } from '@/lib/cases';
 import { CaseHero, BlockRenderer } from '@/components/blocks/case';
 import styles from '@/components/blocks/case/style.module.scss';
-import Link from 'next/link';
 
 export async function generateStaticParams() {
   const cases = getAllCases();
@@ -62,7 +61,7 @@ export default async function CasePage({ params }: { params: Promise<{ slug: str
         
         <div className={styles.blocksContainer}>
           {caseData.blocks.map((block, i) => (
-            <BlockRenderer key={i} block={block} index={i} />
+            <BlockRenderer key={i} block={block} />
           ))}
         </div>
       </article>

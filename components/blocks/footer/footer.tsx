@@ -6,7 +6,6 @@ import { useScroll, m, useTransform } from 'framer-motion';
 import Magnetic from '../../ui/magnetic';
 import Rounded from '../../ui/roundedbutton';
 import Curve from '../curve';
-import Image from 'next/image';
 
 export default function Footer() {
   const container = useRef<HTMLDivElement | null>(null);

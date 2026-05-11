@@ -16,7 +16,6 @@ export async function POST(request: Request) {
 
     // CSRF / Origin Check
     const origin = request.headers.get('origin');
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.artfcl.com'; // fallback for production
     if (process.env.NODE_ENV === 'production' && origin && !origin.includes('artfcl.com')) {
        console.warn(`Blocked cross-origin request from: ${origin}`);
        return NextResponse.json({ error: 'Unauthorized origin' }, { status: 403 });
@@ -26,7 +25,7 @@ export async function POST(request: Request) {
     let body;
     try {
       body = await request.json();
-    } catch (e) {
+    } catch {
       return NextResponse.json({ error: 'Invalid JSON payload' }, { status: 400 });
     }
 

@@ -31,6 +31,8 @@ export default function Landing() {
   });
 
   useEffect(() => {
+    const currentState = animState.current;
+    
     const handleScroll = () => setIsScrolled(window.scrollY > 10);
     handleScroll(); // Check initially
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -72,8 +74,8 @@ export default function Landing() {
     return () => {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('mousemove', manageMouseMove);
-      if (animState.current.requestAnimationFrameId !== null) {
-        cancelAnimationFrame(animState.current.requestAnimationFrameId);
+      if (currentState.requestAnimationFrameId !== null) {
+        cancelAnimationFrame(currentState.requestAnimationFrameId);
       }
     };
   }, []);

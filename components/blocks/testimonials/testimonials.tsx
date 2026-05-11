@@ -136,7 +136,7 @@ export default function Testimonials() {
                       />
                     </div>
                     
-                    <p className={styles.quote}>"{item.quote}"</p>
+                    <p className={styles.quote}>&quot;{item.quote}&quot;</p>
                     
                     <div className={styles.authorInfo}>
                       <h4 className={styles.authorName}>{item.name}</h4>

@@ -45,7 +45,7 @@ export function CaseHero({ caseData }: { caseData: Case }) {
   );
 }
 
-export function BlockRenderer({ block, index }: { block: CaseBlock, index: number }) {
+export function BlockRenderer({ block }: { block: CaseBlock }) {
   const shouldReduceMotion = useReducedMotion();
   const transition = { duration: shouldReduceMotion ? 0 : 0.8, ease: [0.22, 1, 0.36, 1] as const };
   
@@ -87,7 +87,7 @@ export function BlockRenderer({ block, index }: { block: CaseBlock, index: numbe
     case 'quote':
       return (
         <m.div className={styles.quoteBlock} {...fadeUp}>
-          <blockquote className={styles.quoteText}>"{block.text}"</blockquote>
+          <blockquote className={styles.quoteText}>&quot;{block.text}&quot;</blockquote>
           {(block.author || block.role) && (
             <div className={styles.quoteMeta}>
               {block.author && <strong>{block.author}</strong>}

@@ -64,8 +64,8 @@ export default function Contact() {
 
       if (!response.ok) {
         if (result.details && Array.isArray(result.details)) {
-          const newErrors: any = {};
-          result.details.forEach((err: any) => {
+          const newErrors: Record<string, string> = {};
+          result.details.forEach((err: { path: string; message: string }) => {
             if (err.path) newErrors[err.path.split('.')[0]] = err.message;
           });
           setErrors(newErrors);
@@ -81,11 +81,11 @@ export default function Contact() {
         budget: '', message: '', honeypot: ''
       });
       
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (error instanceof z.ZodError) {
-        const newErrors: any = {};
+        const newErrors: Record<string, string> = {};
         error.issues.forEach((issue) => {
-          if (issue.path[0]) newErrors[issue.path[0]] = issue.message;
+          if (issue.path[0]) newErrors[String(issue.path[0])] = issue.message;
         });
         setErrors(newErrors);
       } else {
@@ -252,7 +252,7 @@ export default function Contact() {
 
               {status === 'success' && (
                 <p className={`${styles.statusMessage} ${styles.success}`}>
-                  Message sent successfully. We'll be in touch soon.
+                  Message sent successfully. We&apos;ll be in touch soon.
                 </p>
               )}
               {status === 'error' && (
