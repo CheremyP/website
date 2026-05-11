@@ -44,8 +44,30 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## Docker & Deployment
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Local Docker Build
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+You can run the application locally using Docker Compose. Since you are running locally, you should pass your local environment file:
+
+```bash
+docker compose --env-file .env.local up --build
+```
+
+This will build the production image and start the server at `http://localhost:3000`.
+
+### CI/CD
+
+This project uses GitHub Actions for continuous integration and deployment.
+- **CI**: On every pull request and push to `main`, the code is linted, type-checked, and built to ensure nothing breaks.
+- **Docker**: Pushes to `main` and tag releases (`v*`) automatically trigger a build that pushes the Docker image to GitHub Container Registry (ghcr.io).
+
+### Server Deployment (Hetzner + Dokploy)
+
+For production, the site is designed to be hosted on a Hetzner server managed via [Dokploy](https://dokploy.com/).
+
+To deploy:
+1. Ensure the GHCR package visibility for the image is configured so Dokploy can pull it (or provide Dokploy with a Personal Access Token).
+2. Point your Dokploy application at `ghcr.io/<github-username>/web_app:latest`.
+3. Set your production environment variables (e.g., `RESEND_API_KEY`, `CONTACT_FROM_EMAIL`, `CONTACT_TO_EMAIL`) in Dokploy.
+4. *Webhook automation for auto-redeployment on push is planned for a later phase.*
