@@ -36,7 +36,9 @@ export default function WorkIndex() {
                     src={c.thumbnail} 
                     alt={c.title} 
                     fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
                     className={styles.image}
+                    priority={i < 4}
                   />
                   <div className={styles.overlay}>
                     <span className={styles.viewText}>View Case</span>

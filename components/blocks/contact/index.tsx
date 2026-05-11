@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import styles from './style.module.scss';
 import SplitText from '@/components/ui/splittext';
 import Rounded from '@/components/ui/roundedbutton';
@@ -12,6 +12,7 @@ const SECTOR_OPTIONS = ['Retail', 'Manufacturing', 'Finance', 'Technology', 'Hea
 const BUDGET_OPTIONS = ['Under 10k', '10k - 50k', '50k - 150k', '150k+'];
 
 export default function Contact() {
+  const formRef = useRef<HTMLFormElement>(null);
   const [formData, setFormData] = useState<Partial<ContactFormData>>({
     name: '',
     email: '',
@@ -62,6 +63,14 @@ export default function Contact() {
       const result = await response.json();
 
       if (!response.ok) {
+        if (result.details && Array.isArray(result.details)) {
+          const newErrors: any = {};
+          result.details.forEach((err: any) => {
+            if (err.path) newErrors[err.path.split('.')[0]] = err.message;
+          });
+          setErrors(newErrors);
+          return;
+        }
         throw new Error(result.error || 'Failed to submit form');
       }
 
@@ -73,10 +82,10 @@ export default function Contact() {
       });
       
     } catch (error: any) {
-      if (error && typeof error === 'object' && 'errors' in error && Array.isArray(error.errors)) {
+      if (error instanceof z.ZodError) {
         const newErrors: any = {};
-        error.errors.forEach((err: any) => {
-          if (err.path[0]) newErrors[err.path[0]] = err.message;
+        error.issues.forEach((issue) => {
+          if (issue.path[0]) newErrors[issue.path[0]] = issue.message;
         });
         setErrors(newErrors);
       } else {
@@ -107,7 +116,7 @@ export default function Contact() {
             </div>
           </div>
 
-          <form className={styles.form} onSubmit={handleSubmit} noValidate>
+          <form ref={formRef} className={styles.form} onSubmit={handleSubmit} noValidate>
             <input
               type="text"
               name="honeypot"
@@ -128,8 +137,10 @@ export default function Contact() {
                   placeholder="John Doe"
                   value={formData.name || ''}
                   onChange={handleChange}
+                  aria-invalid={!!errors.name}
+                  aria-describedby={errors.name ? "name-error" : undefined}
                 />
-                {errors.name && <span className={styles.errorText}>{errors.name}</span>}
+                {errors.name && <span id="name-error" className={styles.errorText} role="alert">{errors.name}</span>}
               </div>
               <div className={styles.fieldGroup}>
                 <label htmlFor="email">Email</label>
@@ -140,8 +151,10 @@ export default function Contact() {
                   placeholder="john@example.com"
                   value={formData.email || ''}
                   onChange={handleChange}
+                  aria-invalid={!!errors.email}
+                  aria-describedby={errors.email ? "email-error" : undefined}
                 />
-                {errors.email && <span className={styles.errorText}>{errors.email}</span>}
+                {errors.email && <span id="email-error" className={styles.errorText} role="alert">{errors.email}</span>}
               </div>
             </div>
 
@@ -171,12 +184,14 @@ export default function Contact() {
             </div>
 
             <div className={styles.fieldGroup}>
-              <label>Sector</label>
-              <div className={styles.chips}>
+              <label id="sector-label">Sector</label>
+              <div className={styles.chips} role="radiogroup" aria-labelledby="sector-label">
                 {SECTOR_OPTIONS.map(opt => (
                   <button
                     key={opt}
                     type="button"
+                    role="radio"
+                    aria-checked={formData.sector === opt}
                     className={formData.sector === opt ? styles.active : ''}
                     onClick={() => handleChipSelect('sector', opt)}
                   >
@@ -184,16 +199,18 @@ export default function Contact() {
                   </button>
                 ))}
               </div>
-              {errors.sector && <span className={styles.errorText}>{errors.sector}</span>}
+              {errors.sector && <span id="sector-error" className={styles.errorText} role="alert">{errors.sector}</span>}
             </div>
 
             <div className={styles.fieldGroup}>
-              <label>Budget Range <span className={styles.optional}>(Optional)</span></label>
-              <div className={styles.chips}>
+              <label id="budget-label">Budget Range <span className={styles.optional}>(Optional)</span></label>
+              <div className={styles.chips} role="radiogroup" aria-labelledby="budget-label">
                 {BUDGET_OPTIONS.map(opt => (
                   <button
                     key={opt}
                     type="button"
+                    role="radio"
+                    aria-checked={formData.budget === opt}
                     className={formData.budget === opt ? styles.active : ''}
                     onClick={() => handleChipSelect('budget', opt)}
                   >
@@ -211,16 +228,17 @@ export default function Contact() {
                 placeholder="Tell us about your project..."
                 value={formData.message || ''}
                 onChange={handleChange}
+                aria-invalid={!!errors.message}
+                aria-describedby={errors.message ? "message-error" : undefined}
               />
-              {errors.message && <span className={styles.errorText}>{errors.message}</span>}
+              {errors.message && <span id="message-error" className={styles.errorText} role="alert">{errors.message}</span>}
             </div>
 
             <div className={styles.submitArea}>
               <Rounded
                 backgroundColor="#000000"
                 onClick={isSubmitting ? undefined : () => {
-                  const form = document.querySelector(`.${styles.form}`) as HTMLFormElement;
-                  if (form) form.requestSubmit();
+                  formRef.current?.requestSubmit();
                 }}
                 style={{
                   opacity: isSubmitting ? 0.6 : 1,

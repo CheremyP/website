@@ -121,6 +121,7 @@ export default function Testimonials() {
                     fill 
                     sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     className={styles.backgroundImage}
+                    priority={item.id <= 3}
                   />
                   
                   <div className={styles.content}>

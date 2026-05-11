@@ -26,17 +26,22 @@ export default function Header() {
           <Link className="flex items-center gap-2" href="/">
             <Image src="/branding/logo.svg" alt="ARTEFCL Logo" width={56} height={56} className="w-10 h-10 md:w-14 md:h-14" />
           </Link>
-          <div onClick={() => setIsActive(a => !a)} className={styles.el}>
+          <button 
+            onClick={() => setIsActive(a => !a)} 
+            className={styles.el}
+            aria-expanded={isActive}
+            aria-label={isActive ? "Close menu" : "Open menu"}
+          >
             <div className={`${styles.burger} ${isActive ? styles.burgerActive : ''}`} />
             <div className={styles.label}>
-              <m.p variants={opacity} animate={!isActive ? 'open' : 'closed'}>
+              <m.p variants={opacity} animate={!isActive ? 'open' : 'closed'} aria-hidden="true">
                 Menu
               </m.p>
-              <m.p variants={opacity} animate={isActive ? 'open' : 'closed'}>
+              <m.p variants={opacity} animate={isActive ? 'open' : 'closed'} aria-hidden="true">
                 Close
               </m.p>
             </div>
-          </div>
+          </button>
           <m.div variants={opacity} animate={!isActive ? "open" : "closed"} className={styles.shopContainer}>
             <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
               <div className="hidden md:flex">

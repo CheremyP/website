@@ -85,6 +85,8 @@ export default function Works() {
                 alt={project.title} 
                 className={styles.image}
                 fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                priority={index === 0}
                 style={{ objectFit: 'cover' }}
                 onError={(e) => {
                   e.currentTarget.style.display = 'none';

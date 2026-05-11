@@ -12,16 +12,17 @@ export function CaseHero({ caseData }: { caseData: Case }) {
   return (
     <section className={styles.heroSection}>
       <div className={styles.content}>
-        <SplitText text={caseData.title} className={styles.title} />
+        <h1 className="sr-only">{caseData.title}</h1>
+        <SplitText text={caseData.title} className={styles.title} aria-hidden="true" />
       </div>
       
       <m.div 
         className={styles.heroImageWrapper}
-        initial={{ y: 50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ ...transition, delay: 0.2 }}
+        initial={{ y: 50 }}
+        animate={{ y: 0 }}
+        transition={{ ...transition, delay: 0 }}
       >
-        <Image src={caseData.heroImage} alt={caseData.title} fill className={styles.image} priority />
+        <Image src={caseData.heroImage} alt={caseData.title} fill sizes="100vw" className={styles.image} priority />
       </m.div>
       
       <div className={styles.content}>
@@ -67,7 +68,7 @@ export function BlockRenderer({ block, index }: { block: CaseBlock, index: numbe
       return (
         <m.div className={`${styles.imageBlock} ${block.fullWidth ? styles.fullWidth : ''}`} {...fadeUp}>
           <div className={styles.imgWrap}>
-            <Image src={block.src} alt={block.alt} fill className={styles.image} />
+            <Image src={block.src} alt={block.alt} fill sizes="(max-width: 768px) 100vw, 80vw" className={styles.image} />
           </div>
           {block.caption && <p className={styles.caption}>{block.caption}</p>}
         </m.div>
@@ -76,10 +77,10 @@ export function BlockRenderer({ block, index }: { block: CaseBlock, index: numbe
       return (
         <m.div className={styles.imagePairBlock} {...fadeUp}>
           <div className={styles.imgWrap}>
-            <Image src={block.srcLeft} alt={block.altLeft} fill className={styles.image} />
+            <Image src={block.srcLeft} alt={block.altLeft} fill sizes="(max-width: 768px) 100vw, 50vw" className={styles.image} />
           </div>
           <div className={styles.imgWrap}>
-            <Image src={block.srcRight} alt={block.altRight} fill className={styles.image} />
+            <Image src={block.srcRight} alt={block.altRight} fill sizes="(max-width: 768px) 100vw, 50vw" className={styles.image} />
           </div>
         </m.div>
       );
