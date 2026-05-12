@@ -61,9 +61,9 @@ This document tracks all remaining tasks required before deploying `artfcl.com` 
 - [ ] **Privacy Compliance**: Ensure dead click / session replay is gated behind cookie consent and that no PII is captured in replay recordings (review `maskContent` options for inputs and text fields).
 
 ## 10. Code Hygiene & Refactoring
-- [ ] **Rename `header/footer/` → `header/nav-links/`**: The folder `components/blocks/header/footer/` exports a `Footer` component used exclusively by the nav overlay, but shares its name with the standalone `components/blocks/footer/` block. Rename to `components/blocks/header/nav-links/` and update the import in `header/nav/index.tsx` accordingly.
-- [ ] **Standardize `header/nav/index.tsx` export**: Rename the default export from `Index` to `NavLinks` to match the folder and the pattern used by other blocks (e.g., `cards/index.tsx` exports `Cards`).
-- [ ] **Standardize style module naming**: Most blocks use `style.module.css` but `components/blocks/footer/` uses `style.module.scss`. Unify to `.css` or migrate consistently to `.scss` across all blocks.
-- [ ] **TypeScript strict mode**: Run `tsc --strict` and address any `any` types or missing return types in `components/blocks/`.
-- [ ] **Dead code audit**: Check `components/blocks/` for unused imports, commented-out code, or abandoned block variants.
-- [ ] **Remove `posthog-setup-report.md`**: Delete this wizard-generated artifact as it contains no runtime or operational value.
+- [x] **Rename `header/footer/` → `header/nav-links/`**: The folder `components/blocks/header/footer/` exports a `Footer` component used exclusively by the nav overlay, but shares its name with the standalone `components/blocks/footer/` block. Rename to `components/blocks/header/nav-links/` and update the import in `header/nav/index.tsx` accordingly.
+- [x] **Standardize `header/nav/index.tsx` export**: Rename the default export from `Index` to `NavLinks` to match the folder and the pattern used by other blocks (e.g., `cards/index.tsx` exports `Cards`).
+- [x] **Standardize style module naming**: Most blocks use `style.module.css` but `components/blocks/footer/` uses `style.module.scss`. Unify to `.css` or migrate consistently to `.scss` across all blocks.
+- [x] **TypeScript strict mode**: Run `tsc --strict` and address any `any` types or missing return types in `components/blocks/`.
+- [x] **Dead code audit**: Check `components/blocks/` for unused imports, commented-out code, or abandoned block variants.
+- [x] **Remove `posthog-setup-report.md`**: Delete this wizard-generated artifact as it contains no runtime or operational value.
