@@ -18,6 +18,25 @@
     color: #9f9689;
 }
 
+.legal {
+    display: flex;
+    gap: 15px;
+    font-size: 12px;
+    text-transform: uppercase;
+    margin-top: 15px;
+    color: #9f9689;
+}
+
+.legal a {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.2s ease;
+}
+
+.legal a:hover {
+    color: #ffffff;
+}
+
 @media only screen and (min-width: 1000px) {
     .footer{
         justify-content: space-between;

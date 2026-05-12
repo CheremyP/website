@@ -1,8 +1,10 @@
 import { notFound } from 'next/navigation';
+import { cookies } from 'next/headers';
 import Header from "@/components/blocks/header";
 import Footer from "@/components/blocks/footer/footer";
 import { getCaseBySlug, getAllCases } from '@/lib/cases';
 import { CaseHero, BlockRenderer } from '@/components/blocks/case';
+import { getPostHogClient } from '@/lib/posthog-server';
 import styles from '@/components/blocks/case/style.module.scss';
 
 export async function generateStaticParams() {
@@ -47,10 +49,36 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function CasePage({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = await params;
   const caseData = getCaseBySlug(resolvedParams.slug);
-  
+
   if (!caseData) {
     notFound();
   }
+
+  const cookieStore = await cookies();
+  const phCookie = cookieStore.get(`ph_${process.env.NEXT_PUBLIC_POSTHOG_TOKEN}_posthog`);
+  let distinctId = 'anonymous';
+  if (phCookie?.value) {
+    try {
+      const parsed = JSON.parse(decodeURIComponent(phCookie.value));
+      if (parsed.distinct_id) distinctId = parsed.distinct_id;
+    } catch {
+      // ignore malformed cookie
+    }
+  }
+
+  const posthog = getPostHogClient();
+  posthog.capture({
+    distinctId,
+    event: 'case_study_viewed',
+    properties: {
+      slug: caseData.slug,
+      title: caseData.title,
+      client: caseData.client,
+      sector: caseData.sector,
+      year: caseData.year,
+    },
+  });
+  await posthog.flush();
 
   return (
     <main style={{ backgroundColor: '#FFFFFF', minHeight: '100vh', color: '#141516' }}>

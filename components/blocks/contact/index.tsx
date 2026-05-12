@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
+import posthog from 'posthog-js';
 import styles from './style.module.scss';
 import SplitText from '@/components/ui/splittext';
 import Rounded from '@/components/ui/roundedbutton';
@@ -13,6 +14,7 @@ const BUDGET_OPTIONS = ['Under 10k', '10k - 50k', '50k - 150k', '150k+'];
 
 export default function Contact() {
   const formRef = useRef<HTMLFormElement>(null);
+  const hasStartedRef = useRef(false);
   const [formData, setFormData] = useState<Partial<ContactFormData>>({
     name: '',
     email: '',
@@ -35,12 +37,21 @@ export default function Contact() {
     if (errors[name as keyof ContactFormData]) {
       setErrors(prev => ({ ...prev, [name]: undefined }));
     }
+    if (!hasStartedRef.current && name !== 'honeypot') {
+      hasStartedRef.current = true;
+      posthog.capture('contact_form_started');
+    }
   };
 
   const handleChipSelect = (field: 'sector' | 'budget', value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: undefined }));
+    }
+    if (field === 'sector') {
+      posthog.capture('sector_selected', { sector: value });
+    } else if (field === 'budget') {
+      posthog.capture('budget_selected', { budget: value });
     }
   };
 
@@ -75,12 +86,19 @@ export default function Contact() {
       }
 
       setStatus('success');
+      posthog.capture('contact_form_submitted', {
+        sector: formData.sector,
+        budget: formData.budget,
+        has_company: !!formData.company,
+        has_phone: !!formData.phone,
+      });
       // Reset form on success
       setFormData({
         name: '', email: '', phone: '', company: '', sector: '',
         budget: '', message: '', honeypot: ''
       });
-      
+      hasStartedRef.current = false;
+
     } catch (error: unknown) {
       if (error instanceof z.ZodError) {
         const newErrors: Record<string, string> = {};
@@ -90,6 +108,8 @@ export default function Contact() {
         setErrors(newErrors);
       } else {
         setStatus('error');
+        posthog.capture('contact_form_error');
+        posthog.captureException(error);
         console.error(error);
       }
     } finally {

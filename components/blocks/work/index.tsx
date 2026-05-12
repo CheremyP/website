@@ -1,5 +1,6 @@
 'use client';
 import styles from './style.module.scss';
+import posthog from 'posthog-js';
 import Link from 'next/link';
 import Image from 'next/image';
 import { getAllCases } from '@/lib/cases';
@@ -30,7 +31,7 @@ export default function WorkIndex() {
               viewport={{ once: true, margin: '-10% 0px -10% 0px' }}
               transition={{ ...transition, delay: i * 0.1 }}
             >
-              <Link href={`/works/${c.slug}`} className={styles.link}>
+              <Link href={`/works/${c.slug}`} className={styles.link} onClick={() => posthog.capture('case_study_clicked', { slug: c.slug, title: c.title, client: c.client, sector: c.sector })}>
                 <div className={styles.imageWrapper}>
                   <Image 
                     src={c.thumbnail} 

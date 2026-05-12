@@ -4,7 +4,7 @@ const isProd = process.env.NODE_ENV === 'production';
 
 const cspHeader = `
   default-src 'self';
-  script-src 'self' 'unsafe-eval' 'unsafe-inline';
+  script-src 'self' 'unsafe-eval' 'unsafe-inline' https://eu-assets.i.posthog.com;
   style-src 'self' 'unsafe-inline';
   img-src 'self' blob: data:;
   font-src 'self' data:;
@@ -12,8 +12,8 @@ const cspHeader = `
   base-uri 'self';
   form-action 'self';
   frame-ancestors 'none';
-  ${isProd ? "require-trusted-types-for 'script'; trusted-types default;" : ""}
-  upgrade-insecure-requests;
+  connect-src 'self' https://eu.i.posthog.com https://eu-assets.i.posthog.com;
+  ${isProd ? "require-trusted-types-for 'script'; trusted-types default; upgrade-insecure-requests;" : ""}
 `.replace(/\s{2,}/g, ' ').trim();
 
 const nextConfig: NextConfig = {
@@ -21,6 +21,23 @@ const nextConfig: NextConfig = {
   output: "standalone",
   poweredByHeader: false,
   productionBrowserSourceMaps: false,
+  skipTrailingSlashRedirect: true,
+  async rewrites() {
+    return [
+      {
+        source: '/my-data/static/:path*',
+        destination: 'https://eu-assets.i.posthog.com/static/:path*',
+      },
+      {
+        source: '/my-data/array/:path*',
+        destination: 'https://eu-assets.i.posthog.com/array/:path*',
+      },
+      {
+        source: '/my-data/:path*',
+        destination: 'https://eu.i.posthog.com/:path*',
+      },
+    ];
+  },
   async headers() {
     return [
       {

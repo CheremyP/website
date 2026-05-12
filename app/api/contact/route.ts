@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { contactSchema } from '@/lib/contact-schema';
 import { checkRateLimit } from '@/lib/rate-limit';
+import { getPostHogClient } from '@/lib/posthog-server';
 import { ZodError } from 'zod';
 
 export async function POST(request: Request) {
@@ -81,10 +82,30 @@ ${message}
       // Optional: you can add a nicely formatted HTML version here
     });
 
+    const posthog = getPostHogClient();
+
     if (data.error) {
       console.error('Resend Error:', data.error.message); // Log message, not the full object
+      posthog.capture({
+        distinctId: email,
+        event: 'contact_email_failed',
+        properties: { sector, budget: budget || null },
+      });
+      await posthog.flush();
       return NextResponse.json({ error: 'Failed to send message.' }, { status: 500 });
     }
+
+    posthog.capture({
+      distinctId: email,
+      event: 'contact_email_sent',
+      properties: {
+        sector,
+        budget: budget || null,
+        has_company: !!company,
+        has_phone: !!phone,
+      },
+    });
+    await posthog.flush();
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error: unknown) {

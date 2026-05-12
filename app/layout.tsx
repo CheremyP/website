@@ -4,12 +4,17 @@ import Script from "next/script";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { FramerMotionProvider } from "@/components/providers/framer-motion-provider";
+import { PostHogProvider } from "@/components/providers/posthog-provider";
+import ScrollToTop from "@/components/ui/scroll-to-top";
 
 const inter = Inter({
   variable: "--font-sans",
   subsets: ["latin"],
   display: "swap",
 });
+
+const appEnv = process.env.NEXT_PUBLIC_APP_ENV || 'development';
+const isProdEnv = appEnv === 'production';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.artfcl.com'),
@@ -21,7 +26,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: '/',
   },
-  robots: {
+  robots: isProdEnv ? {
     index: true,
     follow: true,
     googleBot: {
@@ -31,6 +36,9 @@ export const metadata: Metadata = {
       'max-image-preview': 'large',
       'max-snippet': -1,
     },
+  } : {
+    index: false,
+    follow: false,
   },
   openGraph: {
     title: "ARTEFCL | AI with Soul, Strategy and Impact",
@@ -119,9 +127,12 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col">
-        <FramerMotionProvider>
-          {children}
-        </FramerMotionProvider>
+        <ScrollToTop />
+        <PostHogProvider>
+          <FramerMotionProvider>
+            {children}
+          </FramerMotionProvider>
+        </PostHogProvider>
       </body>
     </html>
   );
