@@ -1,4 +1,6 @@
-export type BlockType = 
+import { cache } from 'react';
+
+export type BlockType =
   | 'text'
   | 'image'
   | 'image-pair'
@@ -301,17 +303,17 @@ export const casesData: Case[] = [
   }
 ];
 
-export function getCaseBySlug(slug: string): Case | undefined {
+export const getCaseBySlug = cache((slug: string): Case | undefined => {
   return casesData.find(c => c.slug === slug);
-}
+});
 
-export function getAllCases(): Case[] {
+export const getAllCases = cache((): Case[] => {
   return casesData;
-}
+});
 
-export function getNextCase(currentSlug: string): Case | null {
+export const getNextCase = cache((currentSlug: string): Case | null => {
   const currentIndex = casesData.findIndex(c => c.slug === currentSlug);
   if (currentIndex === -1 || casesData.length <= 1) return null;
   const nextIndex = (currentIndex + 1) % casesData.length;
   return casesData[nextIndex];
-}
+});

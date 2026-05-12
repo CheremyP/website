@@ -1,20 +1,20 @@
 'use client';
-import styles from './style.module.css';
+import styles from './style.module.scss';
 import { m } from 'framer-motion';
 import { useState } from 'react';
 import { height } from '../anim';
 import Body from '../body';
-import Footer from '../footer';
 import Image from '../image';
 
 const links = [
   { title: "Home", href: "/", src: "home.png" },
-  { title: "Services", href: "/services", src: "work.jpg" },
+  { title: "Works", href: "/works", src: "work.jpg" },
+  { title: "Services", href: "/services", src: "services.jpg" },
   { title: "About", href: "/about", src: "about.jpg" },
   { title: "Contact", href: "/contact", src: "contact.jpg" }
 ];
 
-export default function Index() {
+export default function Nav() {
   const [selectedLink, setSelectedLink] = useState({ isActive: false, index: 0 });
 
   return (
@@ -22,7 +22,6 @@ export default function Index() {
       <div className={styles.wrapper}>
         <div className={styles.container}>
           <Body links={links} selectedLink={selectedLink} setSelectedLink={setSelectedLink} />
-          <Footer />
         </div>
         <Image
           src={links[selectedLink.index].src}

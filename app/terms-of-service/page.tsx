@@ -2,7 +2,7 @@ import React from 'react';
 import Header from '@/components/blocks/header';
 import Footer from '@/components/blocks/footer/footer';
 import SplitText from '@/components/ui/splittext';
-import styles from '@/components/blocks/legal/style.module.css';
+import styles from '@/components/blocks/legal/style.module.scss';
 
 export default function TermsOfService() {
   return (

@@ -1,5 +1,5 @@
 'use client';
-import styles from './style.module.css';
+import styles from './style.module.scss';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { opacity, background, height } from './anim';

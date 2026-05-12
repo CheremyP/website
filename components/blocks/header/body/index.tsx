@@ -1,6 +1,6 @@
 import { m } from 'framer-motion';
 import Link from 'next/link';
-import styles from './style.module.css';
+import styles from './style.module.scss';
 import { blur, translate } from '../anim';
 import { type Dispatch, type SetStateAction } from 'react';
 import type React from 'react';

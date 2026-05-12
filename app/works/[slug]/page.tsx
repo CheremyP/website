@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { after } from 'next/server';
 import { cookies } from 'next/headers';
 import Header from "@/components/blocks/header";
 import Footer from "@/components/blocks/footer/footer";
@@ -78,7 +79,7 @@ export default async function CasePage({ params }: { params: Promise<{ slug: str
       year: caseData.year,
     },
   });
-  await posthog.flush();
+  after(() => posthog.flush());
 
   return (
     <main style={{ backgroundColor: '#FFFFFF', minHeight: '100vh', color: '#141516' }}>

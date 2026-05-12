@@ -1,7 +1,7 @@
 import React from 'react'
 import { m } from 'framer-motion';
 import Image from 'next/image';
-import styles from './style.module.css';
+import styles from './style.module.scss';
 import { opacity } from '../anim';
 
 type SelectedLink = { isActive: boolean; index: number };

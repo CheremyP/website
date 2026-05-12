@@ -1,9 +1,7 @@
 'use client';
 import styles from './style.module.scss';
 import { useRef, useEffect } from 'react';
-import gsap from 'gsap';
 import Image from 'next/image';
-import ScrollTrigger from 'gsap/dist/ScrollTrigger';
 
 const projects = [
   {
@@ -37,32 +35,41 @@ export default function Works() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
-    
-    // Safety check
-    if (!sectionRef.current || !containerRef.current) return;
+    let ctx: gsap.Context | undefined;
 
-    // Calculate how far to move horizontally
-    // The total scroll distance needs to account for all items minus one viewport width
-    
-    const ctx = gsap.context(() => {
-      const scrollDistance = containerRef.current!.scrollWidth - window.innerWidth;
-      
-      gsap.to(containerRef.current, {
-        x: -scrollDistance,
-        ease: "none",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top top",
-          end: `+=${scrollDistance}`, // The amount of vertical scroll dictates horizontal move
-          pin: true,
-          scrub: 1, // Smooth scrubbing
-          invalidateOnRefresh: true, // Recalculates if screen resizes
-        }
-      });
-    }, sectionRef);
+    const initGsap = async () => {
+      const gsapModule = await import('gsap');
+      const ScrollTriggerModule = await import('gsap/ScrollTrigger');
+      const gsap = gsapModule.default;
+      const ScrollTrigger = ScrollTriggerModule.default;
 
-    return () => ctx.revert();
+      gsap.registerPlugin(ScrollTrigger);
+
+      if (!sectionRef.current || !containerRef.current) return;
+
+      ctx = gsap.context(() => {
+        const scrollDistance = containerRef.current!.scrollWidth - window.innerWidth;
+
+        gsap.to(containerRef.current, {
+          x: -scrollDistance,
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top top",
+            end: `+=${scrollDistance}`,
+            pin: true,
+            scrub: 1,
+            invalidateOnRefresh: true,
+          }
+        });
+      }, sectionRef);
+    };
+
+    initGsap();
+
+    return () => {
+      if (ctx) ctx.revert();
+    };
   }, []);
 
   return (

@@ -1,122 +1,179 @@
 'use client';
 
-import { useState, useRef } from 'react';
-import posthog from 'posthog-js';
+import React from 'react';
 import styles from './style.module.scss';
 import SplitText from '@/components/ui/splittext';
 import Rounded from '@/components/ui/roundedbutton';
 import Magnetic from '@/components/ui/magnetic';
-import { contactSchema, type ContactFormData } from '@/lib/contact-schema';
-import { z } from 'zod';
+import { ContactProvider, useContactContext } from './context';
+import { ContactFormData } from '@/lib/contact-schema';
 
 const SECTOR_OPTIONS = ['Retail', 'Manufacturing', 'Finance', 'Technology', 'Healthcare', 'Hospitality', 'Media', 'Other'];
 const BUDGET_OPTIONS = ['Under 10k', '10k - 50k', '50k - 150k', '150k+'];
 
-export default function Contact() {
-  const formRef = useRef<HTMLFormElement>(null);
-  const hasStartedRef = useRef(false);
-  const [formData, setFormData] = useState<Partial<ContactFormData>>({
-    name: '',
-    email: '',
-    phone: '',
-    company: '',
-    sector: '',
-    budget: '',
-    message: '',
-    honeypot: '',
-  });
+function ContactFrame({ children }: { children: React.ReactNode }) {
+  const { actions, meta: { formRef } } = useContactContext();
+  return (
+    <form ref={formRef} className={styles.form} onSubmit={actions.submitForm} noValidate>
+      <ContactHoneypot />
+      {children}
+    </form>
+  );
+}
 
-  const [errors, setErrors] = useState<Partial<Record<keyof ContactFormData, string>>>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
+function ContactHoneypot() {
+  const { state, actions } = useContactContext();
+  return (
+    <input
+      type="text"
+      name="honeypot"
+      className={styles.visuallyHidden}
+      tabIndex={-1}
+      autoComplete="off"
+      value={state.formData.honeypot || ''}
+      onChange={(e) => actions.updateField('honeypot', e.target.value)}
+    />
+  );
+}
+
+interface ContactFieldProps {
+  name: keyof ContactFormData;
+  label: React.ReactNode;
+  type?: 'text' | 'email' | 'tel' | 'textarea';
+  placeholder?: string;
+}
+
+function ContactField({ name, label, type = 'text', placeholder }: ContactFieldProps) {
+  const { state, actions } = useContactContext();
+  
+  const value = state.formData[name] || '';
+  const error = state.errors[name];
+  const isInvalid = !!error;
+  const errorId = isInvalid ? `${name}-error` : undefined;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    // Clear error when user types
-    if (errors[name as keyof ContactFormData]) {
-      setErrors(prev => ({ ...prev, [name]: undefined }));
-    }
-    if (!hasStartedRef.current && name !== 'honeypot') {
-      hasStartedRef.current = true;
-      posthog.capture('contact_form_started');
-    }
+    actions.updateField(name, e.target.value);
   };
 
-  const handleChipSelect = (field: 'sector' | 'budget', value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: undefined }));
-    }
-    if (field === 'sector') {
-      posthog.capture('sector_selected', { sector: value });
-    } else if (field === 'budget') {
-      posthog.capture('budget_selected', { budget: value });
-    }
-  };
+  return (
+    <div className={styles.fieldGroup}>
+      <label htmlFor={name}>{label}</label>
+      {type === 'textarea' ? (
+        <textarea
+          id={name}
+          name={name}
+          placeholder={placeholder}
+          value={value}
+          onChange={handleChange}
+          aria-invalid={isInvalid}
+          aria-describedby={errorId}
+        />
+      ) : (
+        <input
+          type={type}
+          id={name}
+          name={name}
+          placeholder={placeholder}
+          value={value}
+          onChange={handleChange}
+          aria-invalid={isInvalid}
+          aria-describedby={errorId}
+        />
+      )}
+      {isInvalid && (
+        <span id={errorId} className={styles.errorText} role="alert">
+          {error}
+        </span>
+      )}
+    </div>
+  );
+}
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setStatus('idle');
-    setErrors({});
+interface ContactChipGroupProps {
+  name: keyof ContactFormData;
+  label: React.ReactNode;
+  options: string[];
+}
 
-    try {
-      // Client-side validation
-      const validData = contactSchema.parse(formData);
+function ContactChipGroup({ name, label, options }: ContactChipGroupProps) {
+  const { state, actions } = useContactContext();
+  
+  const value = state.formData[name];
+  const error = state.errors[name];
+  const isInvalid = !!error;
+  const errorId = isInvalid ? `${name}-error` : undefined;
+  const labelId = `${name}-label`;
 
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(validData),
-      });
+  return (
+    <div className={styles.fieldGroup}>
+      <label id={labelId}>{label}</label>
+      <div className={styles.chips} role="radiogroup" aria-labelledby={labelId}>
+        {options.map((opt) => (
+          <button
+            key={opt}
+            type="button"
+            role="radio"
+            aria-checked={value === opt}
+            className={value === opt ? styles.active : ''}
+            onClick={() => actions.updateField(name, opt)}
+          >
+            {opt}
+          </button>
+        ))}
+      </div>
+      {isInvalid && (
+        <span id={errorId} className={styles.errorText} role="alert">
+          {error}
+        </span>
+      )}
+    </div>
+  );
+}
 
-      const result = await response.json();
+function ContactSubmit() {
+  const { state, meta: { formRef } } = useContactContext();
+  const { isSubmitting, status } = state;
+  
+  return (
+    <div className={styles.submitArea}>
+      <Rounded
+        backgroundColor="#000000"
+        onClick={isSubmitting ? undefined : () => {
+          formRef.current?.requestSubmit();
+        }}
+        style={{
+          opacity: isSubmitting ? 0.6 : 1,
+          pointerEvents: isSubmitting ? 'none' : 'auto',
+        }}
+      >
+        <p style={{ textTransform: 'none' }}>
+          {isSubmitting ? 'Sending...' : 'Submit'}
+        </p>
+      </Rounded>
 
-      if (!response.ok) {
-        if (result.details && Array.isArray(result.details)) {
-          const newErrors: Record<string, string> = {};
-          result.details.forEach((err: { path: string; message: string }) => {
-            if (err.path) newErrors[err.path.split('.')[0]] = err.message;
-          });
-          setErrors(newErrors);
-          return;
-        }
-        throw new Error(result.error || 'Failed to submit form');
-      }
+      {status === 'success' && (
+        <p className={`${styles.statusMessage} ${styles.success}`}>
+          Message sent successfully. We&apos;ll be in touch soon.
+        </p>
+      )}
+      {status === 'error' && (
+        <p className={`${styles.statusMessage} ${styles.error}`}>
+          Something went wrong. Please try again.
+        </p>
+      )}
+    </div>
+  );
+}
 
-      setStatus('success');
-      posthog.capture('contact_form_submitted', {
-        sector: formData.sector,
-        budget: formData.budget,
-        has_company: !!formData.company,
-        has_phone: !!formData.phone,
-      });
-      // Reset form on success
-      setFormData({
-        name: '', email: '', phone: '', company: '', sector: '',
-        budget: '', message: '', honeypot: ''
-      });
-      hasStartedRef.current = false;
+const Contact = {
+  Provider: ContactProvider,
+  Frame: ContactFrame,
+  Field: ContactField,
+  ChipGroup: ContactChipGroup,
+  Submit: ContactSubmit,
+};
 
-    } catch (error: unknown) {
-      if (error instanceof z.ZodError) {
-        const newErrors: Record<string, string> = {};
-        error.issues.forEach((issue) => {
-          if (issue.path[0]) newErrors[String(issue.path[0])] = issue.message;
-        });
-        setErrors(newErrors);
-      } else {
-        setStatus('error');
-        posthog.capture('contact_form_error');
-        posthog.captureException(error);
-        console.error(error);
-      }
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
+export default function ContactSection() {
   return (
     <section className={styles.contactSection}>
       <div className={styles.content}>
@@ -136,152 +193,45 @@ export default function Contact() {
             </div>
           </div>
 
-          <form ref={formRef} className={styles.form} onSubmit={handleSubmit} noValidate>
-            <input
-              type="text"
-              name="honeypot"
-              className={styles.visuallyHidden}
-              tabIndex={-1}
-              autoComplete="off"
-              value={formData.honeypot || ''}
-              onChange={handleChange}
-            />
-
-            <div className={styles.row}>
-              <div className={styles.fieldGroup}>
-                <label htmlFor="name">Name</label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  placeholder="John Doe"
-                  value={formData.name || ''}
-                  onChange={handleChange}
-                  aria-invalid={!!errors.name}
-                  aria-describedby={errors.name ? "name-error" : undefined}
-                />
-                {errors.name && <span id="name-error" className={styles.errorText} role="alert">{errors.name}</span>}
+          <Contact.Provider>
+            <Contact.Frame>
+              <div className={styles.row}>
+                <Contact.Field name="name" label="Name" placeholder="John Doe" />
+                <Contact.Field name="email" label="Email" type="email" placeholder="john@example.com" />
               </div>
-              <div className={styles.fieldGroup}>
-                <label htmlFor="email">Email</label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  placeholder="john@example.com"
-                  value={formData.email || ''}
-                  onChange={handleChange}
-                  aria-invalid={!!errors.email}
-                  aria-describedby={errors.email ? "email-error" : undefined}
-                />
-                {errors.email && <span id="email-error" className={styles.errorText} role="alert">{errors.email}</span>}
-              </div>
-            </div>
 
-            <div className={styles.row}>
-              <div className={styles.fieldGroup}>
-                <label htmlFor="company">Company <span className={styles.optional}>(Optional)</span></label>
-                <input
-                  type="text"
-                  id="company"
-                  name="company"
-                  placeholder="Your Organization"
-                  value={formData.company || ''}
-                  onChange={handleChange}
+              <div className={styles.row}>
+                <Contact.Field 
+                  name="company" 
+                  label={<>Company <span className={styles.optional}>(Optional)</span></>} 
+                  placeholder="Your Organization" 
+                />
+                <Contact.Field 
+                  name="phone" 
+                  label={<>Phone <span className={styles.optional}>(Optional)</span></>} 
+                  type="tel" 
+                  placeholder="+1 (555) 000-0000" 
                 />
               </div>
-              <div className={styles.fieldGroup}>
-                <label htmlFor="phone">Phone <span className={styles.optional}>(Optional)</span></label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  placeholder="+1 (555) 000-0000"
-                  value={formData.phone || ''}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
 
-            <div className={styles.fieldGroup}>
-              <label id="sector-label">Sector</label>
-              <div className={styles.chips} role="radiogroup" aria-labelledby="sector-label">
-                {SECTOR_OPTIONS.map(opt => (
-                  <button
-                    key={opt}
-                    type="button"
-                    role="radio"
-                    aria-checked={formData.sector === opt}
-                    className={formData.sector === opt ? styles.active : ''}
-                    onClick={() => handleChipSelect('sector', opt)}
-                  >
-                    {opt}
-                  </button>
-                ))}
-              </div>
-              {errors.sector && <span id="sector-error" className={styles.errorText} role="alert">{errors.sector}</span>}
-            </div>
-
-            <div className={styles.fieldGroup}>
-              <label id="budget-label">Budget Range <span className={styles.optional}>(Optional)</span></label>
-              <div className={styles.chips} role="radiogroup" aria-labelledby="budget-label">
-                {BUDGET_OPTIONS.map(opt => (
-                  <button
-                    key={opt}
-                    type="button"
-                    role="radio"
-                    aria-checked={formData.budget === opt}
-                    className={formData.budget === opt ? styles.active : ''}
-                    onClick={() => handleChipSelect('budget', opt)}
-                  >
-                    {opt}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className={styles.fieldGroup}>
-              <label htmlFor="message">Message</label>
-              <textarea
-                id="message"
-                name="message"
-                placeholder="Tell us about your project..."
-                value={formData.message || ''}
-                onChange={handleChange}
-                aria-invalid={!!errors.message}
-                aria-describedby={errors.message ? "message-error" : undefined}
+              <Contact.ChipGroup name="sector" label="Sector" options={SECTOR_OPTIONS} />
+              
+              <Contact.ChipGroup 
+                name="budget" 
+                label={<>Budget Range <span className={styles.optional}>(Optional)</span></>} 
+                options={BUDGET_OPTIONS} 
               />
-              {errors.message && <span id="message-error" className={styles.errorText} role="alert">{errors.message}</span>}
-            </div>
 
-            <div className={styles.submitArea}>
-              <Rounded
-                backgroundColor="#000000"
-                onClick={isSubmitting ? undefined : () => {
-                  formRef.current?.requestSubmit();
-                }}
-                style={{
-                  opacity: isSubmitting ? 0.6 : 1,
-                  pointerEvents: isSubmitting ? 'none' : 'auto',
-                }}
-              >
-                <p style={{ textTransform: 'none' }}>
-                  {isSubmitting ? 'Sending...' : 'Submit'}
-                </p>
-              </Rounded>
+              <Contact.Field 
+                name="message" 
+                label="Message" 
+                type="textarea" 
+                placeholder="Tell us about your project..." 
+              />
 
-              {status === 'success' && (
-                <p className={`${styles.statusMessage} ${styles.success}`}>
-                  Message sent successfully. We&apos;ll be in touch soon.
-                </p>
-              )}
-              {status === 'error' && (
-                <p className={`${styles.statusMessage} ${styles.error}`}>
-                  Something went wrong. Please try again.
-                </p>
-              )}
-            </div>
-          </form>
+              <Contact.Submit />
+            </Contact.Frame>
+          </Contact.Provider>
         </div>
       </div>
     </section>

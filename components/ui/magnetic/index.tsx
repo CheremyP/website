@@ -32,6 +32,7 @@ export default function Magnetic({ children }: Props) {
   }, []);
 
   const onMouseMove = (e: React.MouseEvent<HTMLSpanElement>) => {
+    if (window.matchMedia("(pointer: coarse)").matches) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - (rect.left + rect.width / 2);
     const y = e.clientY - (rect.top + rect.height / 2);
@@ -40,6 +41,7 @@ export default function Magnetic({ children }: Props) {
   };
 
   const onMouseLeave = () => {
+    if (window.matchMedia("(pointer: coarse)").matches) return;
     xTo.current?.(0);
     yTo.current?.(0);
   };

@@ -42,8 +42,10 @@
   gap: 4vh;
 
   .sticky {
-    position: sticky;
-    top: 15vh;
+    @media (min-width: 992px) {
+      position: sticky;
+      top: 15vh;
+    }
   }
 
   .emailWrapper {
