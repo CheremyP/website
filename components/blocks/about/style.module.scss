@@ -7,6 +7,7 @@
   justify-content: center;
   padding: 15vh 0;
   box-sizing: border-box;
+  overflow: hidden; // Prevent handwriting from breaking viewport on mobile
 
   .content {
     width: 92vw;
@@ -15,9 +16,28 @@
     display: flex;
     flex-direction: column;
     gap: 10vh;
+    position: relative;
   }
 
   .header {
+    position: relative;
+    padding-top: 4vh; // Room for handwriting
+
+    .handwritingWrapper {
+      position: absolute;
+      top: -20px;
+      right: 10%;
+      z-index: 10;
+      opacity: 0.8;
+      pointer-events: none;
+      
+      @media (max-width: 768px) {
+        right: 0;
+        top: -40px;
+        transform: scale(0.7);
+      }
+    }
+
     h1 {
       margin: 0;
       font-size: clamp(3rem, 6vw, 7rem);
@@ -26,43 +46,145 @@
       letter-spacing: -0.04em;
       text-transform: uppercase;
       color: #141516;
+      position: relative;
+      z-index: 2;
     }
   }
 
-  .bodyText {
+  .mainLayout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8vh;
+    
+    @media (min-width: 992px) {
+      grid-template-columns: 1fr 1fr;
+      gap: 120px;
+      align-items: flex-start;
+    }
+  }
+
+  .textColumn {
     display: flex;
     flex-direction: column;
-    gap: 32px;
-    max-width: 900px;
+    gap: 40px;
 
     p {
       margin: 0;
-      font-size: clamp(1.2rem, 2vw, 1.8rem);
+      font-size: clamp(1.2rem, 1.8vw, 1.6rem);
       line-height: 1.5;
       color: rgba(0, 0, 0, 0.8);
       font-weight: 400;
     }
   }
 
+  .visualColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    width: 100%;
+    
+    .placeholderLarge {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      background-color: #f5f5f5;
+      border-radius: 4px;
+      position: relative;
+      overflow: hidden;
+      
+      &::after {
+        content: 'Visual Placeholder';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: rgba(0,0,0,0.2);
+        font-size: 1rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+    }
+
+    .placeholderGrid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+
+      .placeholderSmall {
+        width: 100%;
+        aspect-ratio: 1;
+        background-color: #f5f5f5;
+        border-radius: 4px;
+        position: relative;
+        overflow: hidden;
+      }
+    }
+  }
+
+  .heroPlaceholder {
+    width: 100%;
+    aspect-ratio: 21 / 9;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    margin: 4vh 0;
+    position: relative;
+    overflow: hidden;
+    
+    @media (max-width: 768px) {
+      aspect-ratio: 16 / 9;
+    }
+    
+    &::after {
+      content: 'Studio / Team Placeholder';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: rgba(0,0,0,0.2);
+      font-size: 1rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+  }
+
   .sloganContainer {
     margin-top: 5vh;
-    padding-top: 5vh;
+    padding-top: 10vh;
     border-top: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
     
+    .handwritingWrapper2 {
+      position: absolute;
+      top: 0vh;
+      left: 5%;
+      z-index: 10;
+      opacity: 0.7;
+      pointer-events: none;
+      transform: rotate(-10deg);
+      
+      @media (max-width: 768px) {
+        display: none;
+      }
+    }
+
     h2 {
       margin: 0;
-      font-size: clamp(2.5rem, 4vw, 5rem);
+      font-size: clamp(2rem, 4vw, 4.5rem);
       line-height: 1;
       font-weight: 500;
       letter-spacing: -0.03em;
       color: #141516;
+      max-width: 800px;
     }
 
     .sloganSub {
-      margin-top: 20px;
-      font-size: clamp(1.2rem, 2vw, 1.8rem);
+      margin-top: 24px;
+      font-size: clamp(1.2rem, 1.8vw, 1.5rem);
       line-height: 1.5;
-      color: rgba(0, 0, 0, 0.6);
+      color: rgba(0, 0, 0, 0.5);
       font-weight: 400;
     }
   }

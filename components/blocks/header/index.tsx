@@ -49,7 +49,7 @@ export default function Header() {
                   backgroundColor="#000000"
                   onClick={() => { window.location.href = '/contact'; }}
                 >
-                  <p style={{ textTransform: 'none' }}>Contact</p>
+                  <p style={{ textTransform: 'none' }}>Get in Touch</p>
                 </Rounded>
               </div>
               <div className="flex md:hidden">
@@ -58,7 +58,7 @@ export default function Header() {
                   onClick={() => { window.location.href = '/contact'; }}
                   style={{ padding: '0.4em 0.8em', fontSize: '10px' }}
                 >
-                  <p style={{ textTransform: 'none' }}>Contact</p>
+                  <p style={{ textTransform: 'none' }}>Get in Touch</p>
                 </Rounded>
               </div>
             </div>

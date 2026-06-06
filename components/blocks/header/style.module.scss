@@ -1,11 +1,15 @@
 .header{
-    background-color: #ffffff;
     width: 100%;
     box-sizing: border-box;
     padding: 10px;
-    position: relative;
-    z-index: 80; /* ensure header & burger stay above overlay */
+    position: sticky;
+    top: 0;
+    z-index: 100;
 
+    background-color: rgba(255, 255, 255, 0.90);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    
     .background{
         /* CHANGED: was relative + 100% height of header only */
         position: fixed;
@@ -13,7 +17,7 @@
         width: 100%;
         height: 100vh;
         background: black;
-        opacity: 0; /* framer-motion animates this */
+        opacity: 0.1; /* framer-motion animates this */
         pointer-events: none; /* framer-motion toggles */
         z-index: 40; /* sits above page content, below nav + header */
     }

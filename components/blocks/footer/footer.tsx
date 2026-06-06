@@ -56,7 +56,7 @@ export default function Footer() {
 
           <div>
             <h3>Company</h3>
-            <Magnetic><p>About Us</p></Magnetic>
+            <Magnetic><p><Link href="/about" prefetch={false} style={{ color: 'inherit', textDecoration: 'none' }}>About Us</Link></p></Magnetic>
             <Magnetic><p>Socials</p></Magnetic>
             <Magnetic><p onClick={() => { window.location.href = '/contact'; }} style={{ cursor: 'pointer' }}>Contact</p></Magnetic>
           </div>
