@@ -23,7 +23,7 @@ export default function Header() {
     <>
       <div className={styles.header}>
         <div className={styles.bar}>
-          <Link className="flex items-center gap-2" href="/">
+          <Link className="hidden md:flex items-center gap-2" href="/">
             <Image src="/branding/logo.svg" alt="ARTEFCL Logo" width={56} height={56} className="w-10 h-10 md:w-14 md:h-14" />
           </Link>
           <button 

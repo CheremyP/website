@@ -172,11 +172,23 @@
             .info{
                 grid-template-columns: 1fr;
                 row-gap: 16px;
+                margin-left: 24px;
+                margin-right: 24px;
             }
             .nav,
             .title{
                 margin-left: 24px;
                 margin-right: 24px;
+            }
+            .title {
+                .buttonContainer {
+                    position: relative;
+                    left: 0;
+                    top: 0;
+                    margin-top: 40px;
+                    display: flex;
+                    justify-content: flex-start;
+                }
             }
         }
     }
@@ -193,6 +205,11 @@
         position: relative;
         z-index: 1;
 
+        @media (max-width: 768px) {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
         .giantText {
             font-size: 21vw; /* Adjusted for capitalized width */
             font-weight: 600; /* Brutalist weight */
@@ -203,6 +220,13 @@
             text-align: center;
             width: 100%;
             /* Removed broken transform */
+            
+            @media (max-width: 768px) {
+                font-size: clamp(3rem, 19vw, 21vw);
+                padding-left: 2vw;
+                padding-right: 2vw;
+                box-sizing: border-box;
+            }
         }
 
         .legal {

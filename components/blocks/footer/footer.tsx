@@ -63,7 +63,7 @@ export default function Footer() {
 
           <div>
             <h3>Resources</h3>
-            <Magnetic><p>Blog</p></Magnetic>
+            {/* <Magnetic><p>Blog</p></Magnetic> */}
             <Magnetic><p><Link href="/privacy-policy" prefetch={false} style={{ color: 'inherit', textDecoration: 'none' }}>Privacy Policy</Link></p></Magnetic>
             <Magnetic><p><Link href="/terms-of-service" prefetch={false} style={{ color: 'inherit', textDecoration: 'none' }}>Terms of Service</Link></p></Magnetic>
           </div>
