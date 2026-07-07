@@ -1,7 +1,9 @@
 .body{
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: start;
+    justify-items: start;
+    row-gap: 0.12em;
     margin-top: 40px;
     width: 100%;
 }
@@ -11,33 +13,94 @@
     text-decoration: none;
     text-transform: uppercase;
     display: block;
-    width: 100%;
+    width: auto;
 }
 
 .body p{
-    margin: 0px;
+    margin: 0;
     display: flex;
     overflow: hidden;
-    font-size: 10vw; /* fluid text on mobile */
-    padding: 15px 0; /* better tap target */
-    font-weight: 300;
+    font-size: clamp(2rem, 10vw, 3.25rem);
+    line-height: 0.92;
+    letter-spacing: -0.04em;
+    padding: 0.08em 0;
+    font-weight: 400;
+    white-space: nowrap;
 }
 
-@media only screen and (min-width: 1000px) {
-   
+/* Tablet: 2 per row → 2 + 2 + 1 */
+@media only screen and (min-width: 600px) {
     .body{
-        max-width: 1200px;
-        margin-top: 80px;
-        flex-direction: row;
-        width: auto;
-    }
-    
-    .body a {
-        width: auto;
+        grid-template-columns: repeat(2, max-content);
+        column-gap: clamp(20px, 5vw, 72px);
+        row-gap: 0.06em;
     }
 
     .body p{
-        font-size: 5vw;
-        padding: 10px 2vw 10px 0;
+        font-size: clamp(2.25rem, 6.5vw, 3.75rem);
+        letter-spacing: -0.045em;
     }
+}
+
+/* Desktop: 3 per row → 3 + 2 */
+@media only screen and (min-width: 1000px) {
+    .body{
+        grid-template-columns: repeat(3, max-content);
+        column-gap: clamp(28px, 3.5vw, 88px);
+        row-gap: 0.04em;
+        margin-top: 48px;
+        margin-bottom: 80px;
+        width: auto;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .body p{
+        font-size: clamp(2.5rem, 3.6vw, 4.75rem);
+        line-height: 0.88;
+        letter-spacing: -0.05em;
+        padding: 0.04em 0;
+    }
+}
+
+/* Mobile fullscreen menu */
+.mobileBody {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 0;
+    width: 100%;
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+    row-gap: 0;
+}
+
+.mobileBody .mobileLink {
+    color: #ffffff;
+    text-decoration: none;
+    text-transform: uppercase;
+    display: block;
+    width: 100%;
+}
+
+.mobileBody p {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    overflow: hidden;
+    font-size: clamp(2.5rem, 12vw, 4rem);
+    line-height: 0.92;
+    letter-spacing: -0.05em;
+    padding: 0.12em 0;
+    font-weight: 400;
+    white-space: normal;
+    color: #ffffff;
+}
+
+.charMask {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: bottom;
+    line-height: 1;
 }

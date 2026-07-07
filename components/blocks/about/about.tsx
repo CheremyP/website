@@ -46,7 +46,7 @@ export default function About() {
   };
 
   return (
-    <section className={styles.aboutSection}>
+    <section className={styles.aboutSection} data-header-theme="light">
       <div className={styles.content}>
         
         <div className={styles.header}>

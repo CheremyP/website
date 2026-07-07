@@ -1,7 +1,7 @@
 'use client'
 import Image from 'next/image';
 import styles from './style.module.scss';
-import { useTransform, m, useScroll, MotionValue } from 'framer-motion';
+import { useTransform, m, useScroll, MotionValue, useReducedMotion } from 'framer-motion';
 import { useRef } from 'react';
 
 interface CardProps {
@@ -17,9 +17,19 @@ interface CardProps {
   targetScale: number;
 }
 
-const Card = ({i, title, description, src, progress, range, targetScale}: CardProps) => {
+const FEATURES = [
+  ['User Research', 'Accessibility', 'User Experience Design', 'User Interface Design', 'Webshop Design'],
+  ['Design Systems', 'Native App Design', 'Web Design', 'Visual Prototyping', 'User Testing'],
+];
 
+const Card = ({i, title, description, src, progress, range, targetScale}: CardProps) => {
   const container = useRef(null);
+  const shouldReduceMotion = useReducedMotion();
+  const transition = {
+    duration: shouldReduceMotion ? 0 : 0.8,
+    ease: [0.22, 1, 0.36, 1] as const,
+  };
+
   const { scrollYProgress } = useScroll({
     target: container,
     offset: ['start end', 'start start']
@@ -41,23 +51,35 @@ const Card = ({i, title, description, src, progress, range, targetScale}: CardPr
         
         <div className={styles.body}>
           <div className={styles.contentLeft}>
-            <p className={styles.description}>{description}</p>
+            <m.p
+              className={styles.description}
+              initial={{ y: shouldReduceMotion ? 0 : 30, opacity: shouldReduceMotion ? 1 : 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              viewport={{ once: true, margin: '-10% 0px -10% 0px' }}
+              transition={transition}
+            >
+              {description}
+            </m.p>
             <hr className={styles.divider} />
             <div className={styles.features}>
-              <ul>
-                <li>User Research</li>
-                <li>Accessibility</li>
-                <li>User Experience Design</li>
-                <li>User Interface Design</li>
-                <li>Webshop Design</li>
-              </ul>
-              <ul>
-                <li>Design Systems</li>
-                <li>Native App Design</li>
-                <li>Web Design</li>
-                <li>Visual Prototyping</li>
-                <li>User Testing</li>
-              </ul>
+              {FEATURES.map((list, listIndex) => (
+                <ul key={listIndex}>
+                  {list.map((feature, featureIndex) => (
+                    <m.li
+                      key={feature}
+                      initial={{ y: shouldReduceMotion ? 0 : 20, opacity: shouldReduceMotion ? 1 : 0 }}
+                      whileInView={{ y: 0, opacity: 1 }}
+                      viewport={{ once: true, margin: '-10% 0px -10% 0px' }}
+                      transition={{
+                        ...transition,
+                        delay: shouldReduceMotion ? 0 : (listIndex * 5 + featureIndex) * 0.06,
+                      }}
+                    >
+                      {feature}
+                    </m.li>
+                  ))}
+                </ul>
+              ))}
             </div>
           </div>
 
@@ -70,7 +92,8 @@ const Card = ({i, title, description, src, progress, range, targetScale}: CardPr
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
                 src={`/services/${src}`}
-                alt="image" 
+                alt={title}
+                priority={i === 0}
               />
             </m.div>
           </div>

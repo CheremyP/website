@@ -26,10 +26,10 @@ export default function WorkIndex() {
             <m.div 
               key={c.slug}
               className={styles.caseCard}
-              initial={{ y: 50, opacity: 0 }}
+              initial={{ y: shouldReduceMotion ? 0 : 50, opacity: shouldReduceMotion ? 1 : 0 }}
               whileInView={{ y: 0, opacity: 1 }}
               viewport={{ once: true, margin: '-10% 0px -10% 0px' }}
-              transition={{ ...transition, delay: i * 0.1 }}
+              transition={{ ...transition, delay: shouldReduceMotion ? 0 : i * 0.06 }}
             >
               <Link href={`/works/${c.slug}`} className={styles.link} onClick={() => posthog.capture('case_study_clicked', { slug: c.slug, title: c.title, client: c.client, sector: c.sector })}>
                 <div className={styles.imageWrapper}>
@@ -46,6 +46,7 @@ export default function WorkIndex() {
                   </div>
                 </div>
                 <div className={styles.meta}>
+                  <span className={styles.index}>{String(i + 1).padStart(2, '0')}</span>
                   <h2 className={styles.title}>{c.title}</h2>
                   <div className={styles.tags}>
                     <span>{c.client}</span>

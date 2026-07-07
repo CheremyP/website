@@ -1,3 +1,17 @@
+.desktopHero {
+    @media (max-width: 768px) {
+        display: none;
+    }
+}
+
+.mobileHero {
+    display: none;
+
+    @media (max-width: 768px) {
+        display: block;
+    }
+}
+
 .main{  
     height: calc(100dvh - 60px);
     @media only screen and (min-width: 600px) {
@@ -9,6 +23,7 @@
     width: 100%;
     overflow: hidden;
     position: relative;
+    background-color: #ffffff;
     .title{
         position: absolute;
         width: 100%;
@@ -18,14 +33,6 @@
         transform: translateX(-50%) translateY(-50%);
         box-sizing: border-box;
 
-        @media (max-width: 768px) {
-            left: 0;
-            top: 40px; /* Bring to top, slightly below header height */
-            transform: none;
-            text-align: left;
-            padding: 0 20px;
-        }
-
         h1{
             font-size: clamp(1rem, 2vw, 1.2rem);
             font-weight: 400;
@@ -33,8 +40,7 @@
             margin: 0px;
             text-align: center;
             @media (max-width: 768px) {
-                text-align: left;
-                display: none; /* Let the giant ARTEFCL text speak for itself */
+                display: none;
             }
         }
         p{
@@ -45,14 +51,6 @@
             text-align: center;
             margin-top: 10px;
             letter-spacing: 0.05em;
-
-            @media (max-width: 768px) {
-                text-align: left;
-                font-size: 16vw; /* Massive brutalist size */
-                line-height: 0.85;
-                margin-top: 0;
-                letter-spacing: -0.02em;
-            }
         }
         .subtitle {
             display: flex;
@@ -62,20 +60,12 @@
             margin: 15px auto 0;
             transform: translateX(0);
             gap: 15px; /* Adds space between the lines */
-
-            @media (max-width: 768px) {
-                margin: 20px 0 0 0;
-                gap: 8px; /* Tighter stack */
-            }
             
             .handwriting {
                 height: clamp(30px, 4vw, 60px); /* Forces equal heights to normalize varying screenshot sizes */
                 width: auto;
                 object-fit: contain;
                 transform-origin: left center;
-                @media (max-width: 768px) {
-                    height: 28px; /* Elegant, small size on mobile */
-                }
             }
 
             img:nth-child(1) { margin-left: 0; margin-bottom: 20px;}
@@ -94,12 +84,6 @@
         width: 100%;
         height: 100%;
         position: absolute;
-
-        @media (max-width: 768px) {
-            &:nth-of-type(1), &:nth-of-type(3) {
-                display: none; /* Hide background clutter on mobile */
-            }
-        }
 
         img{
             position: absolute;
@@ -161,7 +145,7 @@
         flex-direction: column;
         align-items: center;
         gap: 10px;
-        z-index: 100;
+        z-index: 30;
         mix-blend-mode: difference;
         
         .text {

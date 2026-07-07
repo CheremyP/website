@@ -1,0 +1,20 @@
+.messagePanel {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  height: auto;
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  box-sizing: border-box;
+}
+
+.list {
+  width: 100%;
+}
+
+.linkLabel {
+  font-size: clamp(2rem, 10vw, 3.25rem);
+  letter-spacing: -0.045em;
+}

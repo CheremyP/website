@@ -1,7 +1,7 @@
 'use client';
 import styles from './style.module.scss';
 import { useRef, useEffect, useState } from 'react';
-import { m, useScroll, useTransform, useInView } from 'framer-motion';
+import { m, useScroll, useTransform, useInView, useReducedMotion } from 'framer-motion';
 
 const metrics = [
   { value: 5, suffix: '+', label: 'Industries Transformed' },
@@ -11,14 +11,14 @@ const metrics = [
 
 const Counter = ({ value, suffix }: { value: number, suffix: string }) => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const isInView = useInView(ref, { once: true, margin: '-10% 0px -10% 0px' });
   const [count, setCount] = useState(0);
 
   useEffect(() => {
     if (isInView) {
       let start = 0;
       const end = value;
-      const duration = 2000; // 2 seconds
+      const duration = 2000;
       const incrementTime = 20;
       const totalSteps = duration / incrementTime;
       const increment = end / totalSteps;
@@ -47,29 +47,29 @@ const Counter = ({ value, suffix }: { value: number, suffix: string }) => {
 
 export default function Studio() {
   const container = useRef(null);
-  
-  // Track scroll progress through this specific container
+  const shouldReduceMotion = useReducedMotion();
+  const transition = {
+    duration: shouldReduceMotion ? 0 : 0.8,
+    ease: [0.22, 1, 0.36, 1] as const,
+  };
+
   const { scrollYProgress } = useScroll({
     target: container,
-    offset: ["start 80%", "end 50%"] // Start revealing when container enters, finish when it reaches center
+    offset: ['start 80%', 'end 50%'],
   });
 
-  // Map scroll progress to the clip-path mask size (0% to 100%)
   const clipProgress = useTransform(scrollYProgress, [0, 1], [0, 100]);
 
   return (
-    <section ref={container} className={styles.studioSection}>
+    <section ref={container} className={styles.studioSection} data-header-theme="light">
       <div className={styles.content}>
         
         <div className={styles.topSplit}>
-          {/* Left: Scroll-Triggered Text Reveal */}
           <div className={styles.textLeft}>
-            {/* Background Text (Faint) */}
             <h2 className={styles.backgroundText}>
               A cross-industry AI studio
             </h2>
             
-            {/* Foreground Text (Solid Black) revealed by clip-path */}
             <m.h2 
               className={styles.foregroundText}
               style={{ clipPath: useTransform(clipProgress, val => `polygon(0 0, ${val}% 0, ${val}% 100%, 0 100%)`) }}
@@ -78,24 +78,28 @@ export default function Studio() {
             </m.h2>
           </div>
 
-          {/* Right: Descriptive Paragraph */}
-          <div className={styles.textRight}>
+          <m.div
+            className={styles.textRight}
+            initial={{ y: shouldReduceMotion ? 0 : 40, opacity: shouldReduceMotion ? 1 : 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true, margin: '-10% 0px -10% 0px' }}
+            transition={{ ...transition, delay: shouldReduceMotion ? 0 : 0.06 }}
+          >
             <p>
               We don&apos;t just build AI, we redefine what&apos;s possible. From AI automation to multi-agent systems that deliver impact. The future doesn&apos;t wait, neither should you.
             </p>
-          </div>
+          </m.div>
         </div>
 
-        {/* Impact Metrics Section */}
         <div className={styles.metricsContainer}>
           {metrics.map((metric, index) => (
             <m.div 
               key={index}
               className={styles.metricBlock}
-              initial={{ y: 50, opacity: 0 }}
+              initial={{ y: shouldReduceMotion ? 0 : 50, opacity: shouldReduceMotion ? 1 : 0 }}
               whileInView={{ y: 0, opacity: 1 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.8, delay: index * 0.2, ease: [0.33, 1, 0.68, 1] }}
+              viewport={{ once: true, margin: '-10% 0px -10% 0px' }}
+              transition={{ ...transition, delay: shouldReduceMotion ? 0 : index * 0.06 }}
             >
               <Counter value={metric.value} suffix={metric.suffix} />
               <p className={styles.label}>{metric.label}</p>

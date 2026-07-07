@@ -175,7 +175,7 @@ const Contact = {
 
 export default function ContactSection() {
   return (
-    <section className={styles.contactSection}>
+    <section className={styles.contactSection} data-header-theme="light">
       <div className={styles.content}>
         <SplitText text="Let's talk." className={styles.heading} />
         

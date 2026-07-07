@@ -73,7 +73,7 @@ export default function Works() {
   }, []);
 
   return (
-    <section ref={sectionRef} className={styles.worksSection}>
+    <section ref={sectionRef} className={styles.worksSection} data-header-theme="light">
       <div className={styles.header}>
         <h2 className={styles.title}>[ Works ]</h2>
         <div className={styles.nav}>

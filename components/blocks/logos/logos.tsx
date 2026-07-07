@@ -1,6 +1,7 @@
 'use client';
 import styles from './style.module.scss';
 import Image from 'next/image';
+import { m, useReducedMotion } from 'framer-motion';
 
 const logos = [
   '/integrations/aws.png',
@@ -14,16 +15,27 @@ const logos = [
 ];
 
 export default function Logos() {
+  const shouldReduceMotion = useReducedMotion();
+  const transition = {
+    duration: shouldReduceMotion ? 0 : 0.8,
+    ease: [0.22, 1, 0.36, 1] as const,
+  };
+
   return (
-    <section className={styles.logosSection}>
-      <div className={styles.headerContainer}>
+    <section className={styles.logosSection} data-header-theme="light">
+      <m.div
+        className={styles.headerContainer}
+        initial={{ y: shouldReduceMotion ? 0 : 40, opacity: shouldReduceMotion ? 1 : 0 }}
+        whileInView={{ y: 0, opacity: 1 }}
+        viewport={{ once: true, margin: '-10% 0px -10% 0px' }}
+        transition={transition}
+      >
         <p className={styles.heading}>
           We build AI infrastructure, intelligent agents, and automations that seamlessly integrate with:
         </p>
-      </div>
+      </m.div>
       <div className={styles.slider}>
         <div className={styles.slideTrack}>
-          {/* Double the logos to create the seamless infinite scroll effect */}
           {[...logos, ...logos].map((logo, index) => (
             <div className={styles.slide} key={index}>
               <Image 

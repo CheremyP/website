@@ -5,10 +5,12 @@ import { m, useReducedMotion } from 'framer-motion';
 interface SplitTextProps {
   text: string;
   className?: string;
+  as?: 'h1' | 'h2';
 }
 
-export default function SplitText({ text, className }: SplitTextProps) {
+export default function SplitText({ text, className, as = 'h1' }: SplitTextProps) {
   const shouldReduceMotion = useReducedMotion();
+  const Tag = as === 'h2' ? m.h2 : m.h1;
 
   // "Awwwards curve" per AGENTS.md
   const transition = {
@@ -38,7 +40,7 @@ export default function SplitText({ text, className }: SplitTextProps) {
   };
 
   return (
-    <m.h1
+    <Tag
       className={className}
       variants={wrapperVariants}
       initial="hidden"
@@ -73,6 +75,6 @@ export default function SplitText({ text, className }: SplitTextProps) {
           {wordIndex !== text.split(' ').length - 1 && '\u00A0'}
         </span>
       ))}
-    </m.h1>
+    </Tag>
   );
 }

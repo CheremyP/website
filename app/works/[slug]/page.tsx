@@ -88,7 +88,7 @@ export default async function CasePage({ params }: { params: Promise<{ slug: str
       <article>
         <CaseHero caseData={caseData} />
         
-        <div className={styles.blocksContainer}>
+        <div className={styles.blocksContainer} data-header-theme="light">
           {caseData.blocks.map((block, i) => (
             <BlockRenderer key={i} block={block} />
           ))}

@@ -6,9 +6,11 @@
    
     .imageContainer{
         display: block;
-        width: 500px;
+        flex-shrink: 0;
+        width: min(500px, 36vw);
         height: 350px;
         position: relative;
+        margin-top: 48px;
     }
     .imageContainer img{
         object-fit: cover;

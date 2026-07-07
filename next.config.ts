@@ -13,6 +13,7 @@ const cspHeader = `
   form-action 'self';
   frame-ancestors 'none';
   connect-src 'self' https://eu.i.posthog.com https://eu-assets.i.posthog.com;
+  worker-src 'self' blob:;
   ${isProd ? "require-trusted-types-for 'script'; trusted-types default; upgrade-insecure-requests;" : ""}
 `.replace(/\s{2,}/g, ' ').trim();
 

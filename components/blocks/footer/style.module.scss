@@ -206,8 +206,8 @@
         z-index: 1;
 
         @media (max-width: 768px) {
-            padding-left: 0;
-            padding-right: 0;
+            padding-left: 24px;
+            padding-right: 24px;
         }
 
         .giantText {
@@ -238,6 +238,10 @@
             padding-left: 1.5vw; /* Aligns visually with the start of the 'A' */
             z-index: 2;
             position: relative;
+
+            @media (max-width: 768px) {
+                padding-left: 0;
+            }
 
             span {
                 color: rgba(255, 255, 255, 0.6); /* Dimmed white for premium feel */

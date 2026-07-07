@@ -6,6 +6,8 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 # Artefcl Brand & UI Guidelines
 
+> Full design reference: [`DESIGN.md`](DESIGN.md)
+
 When building or modifying components for this project, strictly adhere to the following "Awwwards-winning" aesthetic and rules:
 
 ## 1. Aesthetic & Vibe

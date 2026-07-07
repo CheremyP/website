@@ -10,7 +10,7 @@ export function CaseHero({ caseData }: { caseData: Case }) {
   const transition = { duration: shouldReduceMotion ? 0 : 0.8, ease: [0.22, 1, 0.36, 1] as const };
 
   return (
-    <section className={styles.heroSection}>
+    <section className={styles.heroSection} data-header-theme="adaptive">
       <div className={styles.content}>
         <h1 className="sr-only">{caseData.title}</h1>
         <SplitText text={caseData.title} className={styles.title} aria-hidden="true" />

@@ -7,6 +7,11 @@
      flex-direction: column;
      gap: 50px;
      margin-bottom: 80px;
+     width: 92vw;
+     max-width: 1400px;
+     margin-left: auto;
+     margin-right: auto;
+     box-sizing: border-box;
  }
  
  .container{
@@ -14,12 +19,33 @@
      flex-direction: column;
      justify-content: space-between;
  }
+
+ .mobileNav {
+    width: 100%;
+    height: auto;
+    flex: 0 0 auto;
+    overflow: visible;
+ }
+
+ .mobileWrapper {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 0;
+    box-sizing: border-box;
+ }
  
  @media only screen and (min-width: 1000px) {
     
      .wrapper{
          flex-direction: row;
-         margin-bottom: 0px;
+         align-items: flex-start;
+         margin-bottom: 80px;
          justify-content: space-between;
+         gap: 48px;
      }
  }

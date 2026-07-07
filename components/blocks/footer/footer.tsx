@@ -8,6 +8,7 @@ import Magnetic from '../../ui/magnetic';
 import Rounded from '../../ui/roundedbutton';
 import Curve from '../curve';
 import Link from 'next/link';
+import SplitText from '@/components/ui/splittext';
 
 export default function Footer() {
   const container = useRef<HTMLDivElement | null>(null);
@@ -20,11 +21,12 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <m.div ref={container} className={styles.contact}>
+    <m.div ref={container} className={styles.contact} data-header-theme="dark">
       <div className={styles.body}>
         <div className={styles.title}>
-          <h2>Let&apos;s work</h2>
-          <h2>together</h2>
+          <h2 className="sr-only">Let&apos;s work together</h2>
+          <SplitText text="Let's work" className={styles.titleLine} as="h2" />
+          <SplitText text="together" className={styles.titleLine} as="h2" />
           <m.div style={{ x }} className={styles.buttonContainer}>
             <Rounded backgroundColor="rgba(255, 255, 255, 0.15)" className={styles.button} onClick={() => { posthog.capture('get_in_touch_clicked', { source: 'footer_cta' }); window.location.href = '/contact'; }}
             >
@@ -63,7 +65,6 @@ export default function Footer() {
 
           <div>
             <h3>Resources</h3>
-            {/* <Magnetic><p>Blog</p></Magnetic> */}
             <Magnetic><p><Link href="/privacy-policy" prefetch={false} style={{ color: 'inherit', textDecoration: 'none' }}>Privacy Policy</Link></p></Magnetic>
             <Magnetic><p><Link href="/terms-of-service" prefetch={false} style={{ color: 'inherit', textDecoration: 'none' }}>Terms of Service</Link></p></Magnetic>
           </div>
